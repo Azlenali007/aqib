@@ -10,6 +10,7 @@ require_once __DIR__ . '/wallet/WalletTransactionTest.php';
 require_once __DIR__ . '/orders/OrderAndBulkServiceTest.php';
 require_once __DIR__ . '/payments/RazorpayAndManualTest.php';
 require_once __DIR__ . '/child-panels/ChildPanelIsolationTest.php';
+require_once __DIR__ . '/install/InstallerFlowTest.php';
 
 $suites = [
     'Database Schema & Seed Test' => 'run_database_tests',
@@ -20,6 +21,7 @@ $suites = [
     'Order Lifecycle & Bulk Services Test' => 'run_order_and_bulk_service_tests',
     'Razorpay HMAC & Manual Approval Test' => 'run_payment_tests',
     'Child Panel Tenant Isolation Test' => 'run_child_panel_isolation_tests',
+    'Fresh Install, Retry & FK Integrity Test' => 'run_installer_flow_tests',
 ];
 
 echo "=== SMM Panel Pro — PHP Test Suite ===\n\n";

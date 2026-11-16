@@ -1,13 +1,13 @@
 -- Default Essential Configuration Data (No Fake Users, Orders, or Balances)
 SET NAMES utf8mb4;
 
--- Roles
-INSERT IGNORE INTO `roles` (`id`, `name`, `slug`, `description`, `is_system`) VALUES
-(1, 'Super Admin', 'super_admin', 'Full unrestricted access to all modules and security settings', 1),
-(2, 'Admin', 'admin', 'Full operational access excluding destructive system overrides', 1),
-(3, 'Support Staff', 'support_staff', 'Manage support tickets, view orders and user profiles', 1),
-(4, 'Finance Manager', 'finance_manager', 'Manage deposits, manual payment approvals, wallet ledger and financial reports', 1),
-(5, 'Order Manager', 'order_manager', 'Manage orders, refills, services, categories and providers', 1);
+-- Roles (do not assume or hardcode IDs; look up by unique slug)
+INSERT IGNORE INTO `roles` (`name`, `slug`, `description`, `is_system`) VALUES
+('Super Admin', 'super_admin', 'Full unrestricted access to all modules and security settings', 1),
+('Admin', 'admin', 'Full operational access excluding destructive system overrides', 1),
+('Support Staff', 'support_staff', 'Manage support tickets, view orders and user profiles', 1),
+('Finance Manager', 'finance_manager', 'Manage deposits, manual payment approvals, wallet ledger and financial reports', 1),
+('Order Manager', 'order_manager', 'Manage orders, refills, services, categories and providers', 1);
 
 -- Permissions
 INSERT IGNORE INTO `permissions` (`module`, `perm_key`, `label`, `description`) VALUES
@@ -44,25 +44,25 @@ INSERT IGNORE INTO `permissions` (`module`, `perm_key`, `label`, `description`) 
 ('security', 'security.view', 'View Security & Logs', 'Inspect login attempts, activity logs, error logs'),
 ('settings', 'settings.manage', 'Manage System Settings', 'Configure SMTP, backups, maintenance, cron, health');
 
--- Grant all permissions to Super Admin (role_id = 1)
+-- Grant all permissions to Super Admin
 INSERT IGNORE INTO `role_permissions` (`role_id`, `permission_id`)
-SELECT 1, `id` FROM `permissions`;
+SELECT r.`id`, p.`id` FROM `roles` r CROSS JOIN `permissions` p WHERE r.`slug` = 'super_admin';
 
--- Grant operational permissions to Admin (role_id = 2)
+-- Grant operational permissions to Admin
 INSERT IGNORE INTO `role_permissions` (`role_id`, `permission_id`)
-SELECT 2, `id` FROM `permissions` WHERE `perm_key` NOT IN ('roles.manage');
+SELECT r.`id`, p.`id` FROM `roles` r INNER JOIN `permissions` p ON p.`perm_key` NOT IN ('roles.manage') WHERE r.`slug` = 'admin';
 
--- Support Staff (role_id = 3)
+-- Support Staff
 INSERT IGNORE INTO `role_permissions` (`role_id`, `permission_id`)
-SELECT 3, `id` FROM `permissions` WHERE `perm_key` IN ('dashboard.view','users.view','orders.view','orders.refill','tickets.view','tickets.reply','notifications.manage');
+SELECT r.`id`, p.`id` FROM `roles` r INNER JOIN `permissions` p ON p.`perm_key` IN ('dashboard.view','users.view','orders.view','orders.refill','tickets.view','tickets.reply','notifications.manage') WHERE r.`slug` = 'support_staff';
 
--- Finance Manager (role_id = 4)
+-- Finance Manager
 INSERT IGNORE INTO `role_permissions` (`role_id`, `permission_id`)
-SELECT 4, `id` FROM `permissions` WHERE `perm_key` IN ('dashboard.view','users.view','users.wallet','payments.view','payments.approve','wallet.view','currency.manage','referrals.manage','reports.view');
+SELECT r.`id`, p.`id` FROM `roles` r INNER JOIN `permissions` p ON p.`perm_key` IN ('dashboard.view','users.view','users.wallet','payments.view','payments.approve','wallet.view','currency.manage','referrals.manage','reports.view') WHERE r.`slug` = 'finance_manager';
 
--- Order Manager (role_id = 5)
+-- Order Manager
 INSERT IGNORE INTO `role_permissions` (`role_id`, `permission_id`)
-SELECT 5, `id` FROM `permissions` WHERE `perm_key` IN ('dashboard.view','orders.view','orders.edit','orders.cancel','orders.refill','orders.export','categories.manage','services.view','services.manage','providers.view','providers.manage');
+SELECT r.`id`, p.`id` FROM `roles` r INNER JOIN `permissions` p ON p.`perm_key` IN ('dashboard.view','orders.view','orders.edit','orders.cancel','orders.refill','orders.export','categories.manage','services.view','services.manage','providers.view','providers.manage') WHERE r.`slug` = 'order_manager';
 
 -- Currencies (INR is System Base Currency)
 INSERT IGNORE INTO `currencies` (`code`, `name`, `symbol`, `decimal_places`, `is_base`, `is_active`, `sort_order`) VALUES

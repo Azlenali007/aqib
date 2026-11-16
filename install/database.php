@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/Installer.php';
+
 $err = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $host = trim($_POST['host'] ?? '127.0.0.1');
@@ -13,22 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $err = 'Database name and username are required.';
     } else {
         try {
-            $dsnNoDb = "mysql:host=$host;port=$port;charset=utf8mb4";
-            $pdo = new PDO($dsnNoDb, $user, $pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-            $pdo->exec("CREATE DATABASE IF NOT EXISTS `" . str_replace('`', '', $db) . "` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-            $pdo->exec("USE `" . str_replace('`', '', $db) . "`");
+            // Step 1: Connect to the selected MySQL database
+            $pdo = Installer::connectDatabase($host, $port, $db, $user, $pass);
 
-            $schemaSql = file_get_contents(SMM_ROOT . '/database/schema.sql');
-            $seedSql   = file_get_contents(SMM_ROOT . '/database/seeds/default_data.sql');
-
-            foreach ([$schemaSql, $seedSql] as $sqlBlock) {
-                $statements = array_filter(array_map('trim', preg_split('/;\s*[\r\n]+/', $sqlBlock)));
-                foreach ($statements as $stmt) {
-                    if ($stmt !== '' && !str_starts_with($stmt, '--')) {
-                        $pdo->exec($stmt);
-                    }
-                }
-            }
+            // Step 2–5: Create all required tables, seed defaults, create/verify default roles, and obtain Super Admin role ID
+            $superRoleId = Installer::installSchemaAndRoles($pdo, SMM_ROOT);
 
             $credPhp = "<?php\ndeclare(strict_types=1);\nreturn " . var_export([
                 'host' => $host,
@@ -38,15 +29,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'password' => $pass,
                 'charset' => 'utf8mb4',
             ], true) . ";\n";
-            file_put_contents(SMM_CONFIG . '/db_credentials.php', $credPhp, LOCK_EX);
+            if (file_put_contents(SMM_CONFIG . '/db_credentials.php', $credPhp, LOCK_EX) === false) {
+                throw new RuntimeException('Failed to write config/db_credentials.php. Check folder permissions.');
+            }
 
-            $secretsPhp = "<?php\ndeclare(strict_types=1);\nreturn " . var_export([
-                'app_key' => bin2hex(random_bytes(32)),
-                'cron_token' => bin2hex(random_bytes(16)),
-            ], true) . ";\n";
-            file_put_contents(SMM_CONFIG . '/secrets.php', $secretsPhp, LOCK_EX);
+            if (!is_file(SMM_CONFIG . '/secrets.php')) {
+                $secretsPhp = "<?php\ndeclare(strict_types=1);\nreturn " . var_export([
+                    'app_key' => bin2hex(random_bytes(32)),
+                    'cron_token' => bin2hex(random_bytes(16)),
+                ], true) . ";\n";
+                if (file_put_contents(SMM_CONFIG . '/secrets.php', $secretsPhp, LOCK_EX) === false) {
+                    throw new RuntimeException('Failed to write config/secrets.php. Check folder permissions.');
+                }
+            }
 
             $_SESSION['install_db_ok'] = true;
+            $_SESSION['install_super_role_id'] = $superRoleId;
             header('Location: ?step=setup');
             exit;
         } catch (Throwable $e) {

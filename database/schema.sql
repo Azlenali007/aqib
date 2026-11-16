@@ -2,7 +2,6 @@
 -- Strict InnoDB, utf8mb4_unicode_ci, DECIMAL financial precision, Foreign Keys & Indexes
 
 SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
 
 -- --------------------------------------------------------
 -- 1. Roles & Permissions (Admin RBAC)
@@ -760,5 +759,3 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_migrations_name` (`migration`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-SET FOREIGN_KEY_CHECKS = 1;
