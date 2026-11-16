@@ -51,9 +51,9 @@ if ($selectedSvcId > 0 && $selectedCatId === 0) {
     }
 }
 
-$rateInfo = Currency::getExchangeRate(Currency::systemBase(), $displayCurrency);
-$displayRate = $rateInfo ? (float) $rateInfo['rate'] : 1.0;
-$dispMeta = Currency::getCurrencyMeta($displayCurrency);
+$displayRate = (float) ($currencyCtx['rate'] ?? '1.0');
+$dispMeta = $currencyCtx['meta'];
+$dispDecimals = max(2, (int) ($dispMeta['decimal_places'] ?? 2));
 
 $servicesJson = [];
 foreach ($services as $s) {
@@ -75,10 +75,23 @@ foreach ($services as $s) {
 require __DIR__ . '/layouts/header.php';
 ?>
 
+<div class="page-banner">
+  <div class="page-banner-left">
+    <div class="page-banner-icon" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+    </div>
+    <div>
+      <h1 class="page-banner-title">Place New Order</h1>
+      <p class="page-banner-sub">Instant automated delivery &bull; Displaying prices in <?= e($currencyCtx['effective_currency']) ?></p>
+    </div>
+  </div>
+  <a href="/user/index.php?page=mass-order" class="view-all-pill">Mass Order &rarr;</a>
+</div>
+
 <div class="grid-2" style="grid-template-columns: 1.35fr 1fr; align-items:start">
   <div class="card">
     <div class="section-head">
-      <h1 class="section-title">Place New Order</h1>
+      <h2 class="section-title">Order Details</h2>
       <span class="badge badge-processing">Balance: <?= e(format_money((string) ($user['balance'] ?? '0'), $displayCurrency)) ?></span>
     </div>
 
@@ -125,14 +138,14 @@ require __DIR__ . '/layouts/header.php';
           <div class="form-group">
             <label class="form-label" for="orderQty">Quantity</label>
             <input id="orderQty" name="quantity" type="number" class="form-control" min="1" required>
-            <small id="qtyHint" style="color:#777083;font-size:12px">Min: - | Max: -</small>
+            <small id="qtyHint" style="color:var(--muted);font-size:12px">Min: - | Max: -</small>
           </div>
           <div class="form-group">
-            <label class="form-label">Estimated Charge</label>
+            <label class="form-label">Estimated Charge (<?= e($currencyCtx['effective_currency']) ?>)</label>
             <div id="chargePreview" style="padding:11px 14px;border-radius:13px;background:#F3EEFD;color:#4D28B5;font-weight:800;font-size:16px">
               <?= e($dispMeta['symbol']) ?>0.00
             </div>
-            <small id="ratePer1kHint" style="color:#777083;font-size:12px">Price per 1,000: -</small>
+            <small id="ratePer1kHint" style="color:var(--muted);font-size:12px">Price per 1,000: -</small>
           </div>
         </div>
 
@@ -144,7 +157,7 @@ require __DIR__ . '/layouts/header.php';
   <div>
     <div class="card">
       <h2 class="section-title" style="margin-bottom:10px">Service Details</h2>
-      <div id="svcMetaBox" style="font-size:13.5px;color:#777083">
+      <div id="svcMetaBox" style="font-size:13.5px;color:var(--muted)">
         <p style="margin:0 0 8px"><strong>Service ID:</strong> <span id="metaSvcId">-</span></p>
         <p style="margin:0 0 8px"><strong>Refill / Cancel:</strong> <span id="metaFlags">-</span></p>
         <div id="metaDesc" style="background:#FAF8FE;border:1px solid #EFEAF9;border-radius:13px;padding:12px;white-space:pre-line">Select a service to read delivery details and guidelines.</div>
@@ -160,7 +173,7 @@ require __DIR__ . '/layouts/header.php';
               <?= platform_icon_svg((string) $rs['platform'], 22) ?>
               <span style="font-size:13px;font-weight:700"><?= e($rs['name']) ?></span>
             </div>
-            <span style="font-size:12px;color:#7045D8;font-weight:700">Select</span>
+            <span style="font-size:12px;color:var(--primary);font-weight:700">Select</span>
           </a>
         <?php endforeach; ?>
       </div>
@@ -177,6 +190,7 @@ require __DIR__ . '/layouts/header.php';
   const services = <?= json_encode($servicesJson, JSON_UNESCAPED_UNICODE) ?>;
   const displayRate = <?= json_encode($displayRate) ?>;
   const currencySymbol = <?= json_encode($dispMeta['symbol']) ?>;
+  const currencyDecimals = <?= (int) $dispDecimals ?>;
   const userDiscountPct = <?= json_encode((float) ($user['custom_rate_percent'] ?? 0)) ?>;
   const preselectSvcId = <?= (int) $selectedSvcId ?>;
 

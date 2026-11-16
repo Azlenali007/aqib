@@ -23,13 +23,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 require dirname(__DIR__) . '/layouts/header.php';
-render_child_panel_tabs((int) $cpPanel['id'], 'child-panels/pricing');
 ?>
-<div class="card" style="max-width:560px">
-  <h1 class="section-title" style="margin-bottom:14px">Global Profit Margin &amp; Pricing</h1>
+<div class="page-banner">
+  <div class="page-banner-left">
+    <div class="page-banner-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+    </div>
+    <div>
+      <h1 class="page-banner-title">Global Profit Margin &amp; Pricing</h1>
+      <p class="page-banner-sub"><?= e($cpPanel['site_name']) ?> &mdash; Set reseller markup percentage across panel services.</p>
+    </div>
+  </div>
+</div>
+<?php render_child_panel_tabs((int) $cpPanel['id'], 'child-panels/pricing'); ?>
+<div class="card" style="max-width:580px">
+  <h2 class="section-title" style="margin-bottom:14px">Markup Configuration</h2>
   <form method="post">
     <?= csrf_field() ?>
-    <div class="form-group"><label class="form-label">Default Markup Margin (%)</label><input class="form-control" type="number" step="0.5" name="default_profit_margin" value="<?= e((string) $cpPanel['default_profit_margin']) ?>" required></div>
+    <div class="form-group"><label class="form-label">Default Markup Margin (%)</label><input class="form-control" type="number" step="0.5" min="0" name="default_profit_margin" value="<?= e((string) $cpPanel['default_profit_margin']) ?>" required></div>
     <div class="form-group"><label style="display:flex;align-items:center;gap:8px;font-size:13.5px"><input type="checkbox" name="apply_all" value="1"> Recalculate all services on this child panel with this margin</label></div>
     <button class="btn btn-primary" type="submit">Update Pricing</button>
   </form>

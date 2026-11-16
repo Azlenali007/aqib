@@ -23,29 +23,66 @@ $services = Database::fetchAll(
 );
 
 require dirname(__DIR__) . '/layouts/header.php';
-render_child_panel_tabs((int) $cpPanel['id'], 'child-panels/services');
 ?>
-<div class="card">
-  <h1 class="section-title" style="margin-bottom:14px">Child Panel Services (Isolated)</h1>
-  <div class="table-responsive">
-    <table class="data-table">
-      <thead><tr><th>Service</th><th>Your Wholesale</th><th>Child Selling Price</th><th>Status</th><th>Save</th></tr></thead>
-      <tbody>
-      <?php foreach ($services as $s): ?>
-        <tr>
-          <form method="post">
-            <?= csrf_field() ?>
-            <input type="hidden" name="cps_id" value="<?= (int) $s['id'] ?>">
-            <td><div style="display:flex;align-items:center;gap:8px"><?= platform_icon_svg((string) $s['platform'], 20) ?><span><?= e($s['custom_name'] ?: $s['parent_name']) ?></span></div></td>
-            <td><?= e(format_money((string) $s['parent_price'], $displayCurrency)) ?></td>
-            <td><input class="form-control" style="max-width:120px;padding:6px 10px" type="number" step="0.0001" name="custom_selling_price" value="<?= e((string) $s['custom_selling_price']) ?>"></td>
-            <td><label style="font-size:13px"><input type="checkbox" name="is_enabled" value="1" <?= $s['is_enabled'] ? 'checked' : '' ?>> Enabled</label></td>
-            <td><button class="btn btn-primary btn-sm" type="submit">Save</button></td>
-          </form>
-        </tr>
-      <?php endforeach; ?>
-      </tbody>
-    </table>
+<div class="page-banner">
+  <div class="page-banner-left">
+    <div class="page-banner-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    </div>
+    <div>
+      <h1 class="page-banner-title">Child Panel Services</h1>
+      <p class="page-banner-sub"><?= e($cpPanel['site_name']) ?> &mdash; Manage isolated catalog pricing (base inputs in <?= e(Currency::systemBase()) ?>).</p>
+    </div>
   </div>
+</div>
+<?php render_child_panel_tabs((int) $cpPanel['id'], 'child-panels/services'); ?>
+<div class="card">
+  <div class="section-head">
+    <h2 class="section-title">Isolated Service Catalog (<?= count($services) ?>)</h2>
+  </div>
+  <?php if (empty($services)): ?>
+    <div style="text-align:center;color:var(--muted);padding:24px">No child panel services configured yet.</div>
+  <?php else: ?>
+    <div class="desktop-table-wrap">
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead><tr><th>Service</th><th>Your Wholesale</th><th>Display Selling</th><th>Set Selling (<?= e(Currency::systemBase()) ?>)</th><th>Status</th><th>Save</th></tr></thead>
+          <tbody>
+          <?php foreach ($services as $s): $fid = 'cps-form-' . (int) $s['id']; ?>
+            <tr>
+              <td><div style="display:flex;align-items:center;gap:8px"><?= platform_icon_svg((string) $s['platform'], 20) ?><span><?= e($s['custom_name'] ?: $s['parent_name']) ?></span></div></td>
+              <td><?= e(format_money((string) $s['parent_price'], $displayCurrency)) ?></td>
+              <td style="font-weight:700;color:var(--primary)"><?= e(format_money((string) $s['custom_selling_price'], $displayCurrency)) ?></td>
+              <td><input form="<?= e($fid) ?>" class="form-control" style="max-width:125px;padding:6px 10px" type="number" step="0.0001" name="custom_selling_price" value="<?= e((string) $s['custom_selling_price']) ?>"></td>
+              <td><label style="font-size:13px"><input form="<?= e($fid) ?>" type="checkbox" name="is_enabled" value="1" <?= $s['is_enabled'] ? 'checked' : '' ?>> Enabled</label></td>
+              <td>
+                <form id="<?= e($fid) ?>" method="post">
+                  <?= csrf_field() ?>
+                  <input type="hidden" name="cps_id" value="<?= (int) $s['id'] ?>">
+                  <button class="btn btn-primary btn-sm" type="submit">Save</button>
+                </form>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="mobile-cards-list">
+      <?php foreach ($services as $s): ?>
+        <form method="post" class="order-row-card" style="flex-direction:column;align-items:stretch;gap:10px">
+          <?= csrf_field() ?>
+          <input type="hidden" name="cps_id" value="<?= (int) $s['id'] ?>">
+          <div style="display:flex;align-items:center;gap:8px"><?= platform_icon_svg((string) $s['platform'], 20) ?><strong><?= e($s['custom_name'] ?: $s['parent_name']) ?></strong></div>
+          <div style="font-size:12px;color:var(--muted)">Wholesale: <?= e(format_money((string) $s['parent_price'], $displayCurrency)) ?> &middot; Selling: <strong><?= e(format_money((string) $s['custom_selling_price'], $displayCurrency)) ?></strong></div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <input class="form-control" style="max-width:130px;padding:6px 10px" type="number" step="0.0001" name="custom_selling_price" value="<?= e((string) $s['custom_selling_price']) ?>">
+            <label style="font-size:13px"><input type="checkbox" name="is_enabled" value="1" <?= $s['is_enabled'] ? 'checked' : '' ?>> Enabled</label>
+            <button class="btn btn-primary btn-sm" type="submit">Save</button>
+          </div>
+        </form>
+      <?php endforeach; ?>
+    </div>
+  <?php endif; ?>
 </div>
 <?php require dirname(__DIR__) . '/layouts/footer.php'; ?>

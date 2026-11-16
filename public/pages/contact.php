@@ -27,9 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php if ($msgErr): ?><div style="padding:12px;border-radius:12px;background:#FEECEE;color:#B42318;margin-bottom:12px"><?= e($msgErr) ?></div><?php endif; ?>
     <form method="post">
       <?= csrf_field('contact') ?>
-      <div style="margin-bottom:12px"><label style="display:block;font-weight:700;font-size:13px;margin-bottom:5px">Your Name</label><input name="name" required style="width:100%;padding:11px;border:1px solid #EAE5F1;border-radius:12px"></div>
-      <div style="margin-bottom:12px"><label style="display:block;font-weight:700;font-size:13px;margin-bottom:5px">Email Address</label><input type="email" name="email" required style="width:100%;padding:11px;border:1px solid #EAE5F1;border-radius:12px"></div>
-      <div style="margin-bottom:14px"><label style="display:block;font-weight:700;font-size:13px;margin-bottom:5px">Message</label><textarea name="message" rows="5" required style="width:100%;padding:11px;border:1px solid #EAE5F1;border-radius:12px"></textarea></div>
+      <div style="margin-bottom:12px"><label style="display:block;font-weight:700;font-size:13px;margin-bottom:5px">Your Name</label><input class="form-input" name="name" required></div>
+      <div style="margin-bottom:12px"><label style="display:block;font-weight:700;font-size:13px;margin-bottom:5px">Email Address</label><input class="form-input" type="email" name="email" required></div>
+      <div style="margin-bottom:14px"><label style="display:block;font-weight:700;font-size:13px;margin-bottom:5px">Message</label><textarea class="form-textarea" name="message" rows="5" required></textarea></div>
       <button class="btn btn-primary" type="submit">Send Message</button>
     </form>
   </div>

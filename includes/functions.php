@@ -60,13 +60,42 @@ function app_url(string $path = ''): string
 
 function active_user_currency(?array $user = null): string
 {
+    static $activeCodes = null;
+    if ($activeCodes === null) {
+        $activeCodes = [];
+        try {
+            foreach (Currency::activeCurrencies() as $c) {
+                $activeCodes[] = strtoupper((string) $c['code']);
+            }
+        } catch (Throwable) {
+        }
+    }
+
+    $candidates = [];
     if (isset($_SESSION['display_currency']) && is_string($_SESSION['display_currency'])) {
-        return strtoupper($_SESSION['display_currency']);
+        $candidates[] = strtoupper(trim($_SESSION['display_currency']));
     }
     if ($user && !empty($user['preferred_currency'])) {
-        return strtoupper($user['preferred_currency']);
+        $candidates[] = strtoupper(trim((string) $user['preferred_currency']));
+    }
+
+    foreach ($candidates as $code) {
+        if ($code !== '' && (empty($activeCodes) || in_array($code, $activeCodes, true))) {
+            if (isset($_SESSION) && session_status() === PHP_SESSION_ACTIVE) {
+                $_SESSION['display_currency'] = $code;
+            }
+            return $code;
+        }
     }
     return Currency::systemBase();
+}
+
+function currency_switch_url(string $currencyCode): string
+{
+    $params = $_GET;
+    $params['page'] = $params['page'] ?? 'dashboard';
+    $params['set_currency'] = strtoupper(trim($currencyCode));
+    return '/user/index.php?' . http_build_query($params);
 }
 
 function format_money(string|float $amountBase, ?string $displayCurrency = null, ?int $decimals = null): string

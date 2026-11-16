@@ -9,26 +9,46 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!drawer || !backdrop) return;
     drawer.classList.toggle('open', show);
     backdrop.classList.toggle('open', show);
+    document.body.style.overflow = show ? 'hidden' : '';
   }
   if (openBtn) openBtn.addEventListener('click', () => toggleDrawer(true));
   if (closeBtn) closeBtn.addEventListener('click', () => toggleDrawer(false));
   if (backdrop) backdrop.addEventListener('click', () => toggleDrawer(false));
 
-  // Dropdown menus (Currency, Notifications)
+  // Dropdown menus (Currency, Notifications, Profile)
   document.querySelectorAll('[data-dropdown-toggle]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const targetId = btn.getAttribute('data-dropdown-toggle');
       const menu = document.getElementById(targetId);
+      const willOpen = menu ? !menu.classList.contains('open') : false;
+
       document.querySelectorAll('.dropdown-menu.open').forEach(m => {
-        if (m !== menu) m.classList.remove('open');
+        m.classList.remove('open');
       });
-      if (menu) menu.classList.toggle('open');
+      document.querySelectorAll('[data-dropdown-toggle]').forEach(b => {
+        b.setAttribute('aria-expanded', 'false');
+      });
+
+      if (menu && willOpen) {
+        menu.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
     });
   });
 
-  document.addEventListener('click', () => {
-    document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.dropdown-menu')) {
+      document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
+      document.querySelectorAll('[data-dropdown-toggle]').forEach(b => b.setAttribute('aria-expanded', 'false'));
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
+      toggleDrawer(false);
+    }
   });
 
   // Mark notifications read

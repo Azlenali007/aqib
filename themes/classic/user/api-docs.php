@@ -5,14 +5,23 @@ $pageTitle = 'API Documentation';
 $endpoint = app_url('/api/index.php');
 require __DIR__ . '/layouts/header.php';
 ?>
-<div class="card">
-  <div class="section-head">
-    <h1 class="section-title">SMM Reseller API v2 Documentation</h1>
-    <a href="/user/index.php?page=api" class="view-all-pill">&larr; My API Key</a>
+<div class="page-banner">
+  <div class="page-banner-left">
+    <div class="page-banner-icon" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    </div>
+    <div>
+      <h1 class="page-banner-title">SMM Reseller API v2 Documentation</h1>
+      <p class="page-banner-sub">JSON responses via HTTP POST (<code>application/x-www-form-urlencoded</code>)</p>
+    </div>
   </div>
-  <p style="font-size:13.5px;color:#777083">All requests use HTTP <code>POST</code> (application/x-www-form-urlencoded) to <code><?= e($endpoint) ?></code> and return JSON.</p>
+  <a href="/user/index.php?page=api" class="view-all-pill">&larr; My API Key</a>
+</div>
 
-  <h3 style="margin-top:18px">1. Service List</h3>
+<div class="card">
+  <p style="font-size:13.5px;color:var(--muted);margin-top:0">Endpoint URL: <code><?= e($endpoint) ?></code></p>
+
+  <h3 style="margin-top:16px">1. Service List</h3>
   <pre style="background:#24143D;color:#F7F5FB;padding:14px;border-radius:14px;overflow:auto;font-size:12.5px">POST <?= e($endpoint) ?>
 key=YOUR_API_KEY&action=services</pre>
 

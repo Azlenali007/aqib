@@ -23,11 +23,22 @@ $users = Database::fetchAll(
 );
 
 require dirname(__DIR__) . '/layouts/header.php';
-render_child_panel_tabs((int) $cpPanel['id'], 'child-panels/users');
 ?>
+<div class="page-banner">
+  <div class="page-banner-left">
+    <div class="page-banner-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+    </div>
+    <div>
+      <h1 class="page-banner-title">Child Panel Users</h1>
+      <p class="page-banner-sub"><?= e($cpPanel['site_name']) ?> &mdash; Manage isolated customer accounts and credit balances (credits entered in <?= e(Currency::systemBase()) ?>).</p>
+    </div>
+  </div>
+</div>
+<?php render_child_panel_tabs((int) $cpPanel['id'], 'child-panels/users'); ?>
 <div class="grid-2" style="align-items:start">
   <div class="card">
-    <h1 class="section-title" style="margin-bottom:14px">Add Isolated Child User</h1>
+    <h2 class="section-title" style="margin-bottom:14px">Add Isolated Child User</h2>
     <form method="post">
       <?= csrf_field() ?>
       <input type="hidden" name="action" value="create_user">
@@ -41,22 +52,22 @@ render_child_panel_tabs((int) $cpPanel['id'], 'child-panels/users');
   <div class="card">
     <h2 class="section-title" style="margin-bottom:14px">Panel Users (<?= count($users) ?>)</h2>
     <div class="table-responsive">
-      <table class="data-table" style="min-width:440px">
-        <thead><tr><th>User</th><th>Balance</th><th>Status</th><th>Credit</th></tr></thead>
+      <table class="data-table" style="min-width:460px">
+        <thead><tr><th>User</th><th>Balance</th><th>Status</th><th>Credit (<?= e(Currency::systemBase()) ?>)</th></tr></thead>
         <tbody>
         <?php if (empty($users)): ?>
-          <tr><td colspan="4" style="text-align:center;color:#777083">No users registered on this child panel.</td></tr>
+          <tr><td colspan="4" style="text-align:center;color:var(--muted);padding:20px">No users registered on this child panel.</td></tr>
         <?php else: foreach ($users as $cu): ?>
           <tr>
-            <td><strong><?= e($cu['username']) ?></strong><div style="font-size:11.5px;color:#777083"><?= e($cu['email']) ?></div></td>
-            <td style="font-weight:700"><?= e(format_money((string) ($cu['balance'] ?? '0'), $displayCurrency)) ?></td>
+            <td><strong><?= e($cu['username']) ?></strong><div style="font-size:11.5px;color:var(--muted)"><?= e($cu['email']) ?></div></td>
+            <td style="font-weight:700;color:var(--primary)"><?= e(format_money((string) ($cu['balance'] ?? '0'), $displayCurrency)) ?></td>
             <td><span class="badge <?= e(status_badge_class($cu['status'])) ?>"><?= e(ucfirst($cu['status'])) ?></span></td>
             <td>
               <form method="post" style="display:flex;gap:4px">
                 <?= csrf_field() ?>
                 <input type="hidden" name="action" value="credit_user">
                 <input type="hidden" name="child_user_id" value="<?= (int) $cu['id'] ?>">
-                <input class="form-control" style="width:80px;padding:5px 8px" type="number" step="0.01" name="amount" placeholder="Amt" required>
+                <input class="form-control" style="width:86px;padding:5px 8px" type="number" step="0.01" min="0.01" name="amount" placeholder="<?= e(Currency::systemBase()) ?>" required>
                 <button class="btn btn-outline btn-sm" type="submit">+</button>
               </form>
             </td>

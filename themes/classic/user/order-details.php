@@ -32,28 +32,32 @@ $pageTitle = "Order #$orderId";
 require __DIR__ . '/layouts/header.php';
 ?>
 
-<div class="card">
-  <div class="section-head">
-    <div style="display:flex;align-items:center;gap:10px">
+<div class="page-banner">
+  <div class="page-banner-left">
+    <div class="order-row-icon" style="width:46px;height:46px;border-radius:15px">
       <?= platform_icon_svg((string) $order['platform'], 28) ?>
-      <div>
-        <h1 class="section-title">Order #<?= (int) $order['id'] ?></h1>
-        <div style="font-size:13px;color:#777083"><?= e($order['service_name']) ?></div>
-      </div>
     </div>
-    <span class="badge <?= e(status_badge_class($order['status'])) ?>"><?= e(ucfirst(str_replace('_', ' ', $order['status']))) ?></span>
+    <div style="min-width:0">
+      <h1 class="page-banner-title">Order #<?= (int) $order['id'] ?></h1>
+      <p class="page-banner-sub"><?= e($order['service_name']) ?></p>
+    </div>
   </div>
+  <span class="badge <?= e(status_badge_class($order['status'])) ?>"><?= e(ucfirst(str_replace('_', ' ', $order['status']))) ?></span>
+</div>
 
-  <div class="grid-3" style="margin-bottom:16px">
-    <div class="kpi-box"><div class="kpi-label">Quantity</div><div class="kpi-val"><?= number_format((int) $order['quantity']) ?></div></div>
-    <div class="kpi-box"><div class="kpi-label">Charge</div><div class="kpi-val"><?= e(format_money((string) $order['charge'], $displayCurrency)) ?></div></div>
-    <div class="kpi-box"><div class="kpi-label">Remains / Start</div><div class="kpi-val"><?= $order['remains'] ?? '-' ?> / <?= $order['start_count'] ?? '-' ?></div></div>
-  </div>
+<div class="kpi-grid">
+  <div class="kpi-box"><div class="kpi-label">Quantity</div><div class="kpi-val"><?= number_format((int) $order['quantity']) ?></div></div>
+  <div class="kpi-box"><div class="kpi-label">Order Charge (<?= e($currencyCtx['effective_currency']) ?>)</div><div class="kpi-val" style="color:var(--primary)"><?= e(format_money((string) $order['charge'], $displayCurrency)) ?></div></div>
+  <div class="kpi-box"><div class="kpi-label">Start Count</div><div class="kpi-val"><?= $order['start_count'] !== null ? number_format((int) $order['start_count']) : '-' ?></div></div>
+  <div class="kpi-box"><div class="kpi-label">Remains</div><div class="kpi-val"><?= $order['remains'] !== null ? number_format((int) $order['remains']) : '-' ?></div></div>
+</div>
 
-  <p style="font-size:13.5px"><strong>Target Link:</strong> <span style="word-break:break-all;color:#7045D8"><?= e($order['link']) ?></span></p>
-  <p style="font-size:13.5px"><strong>Placed At:</strong> <?= e($order['created_at']) ?> &bull; <strong>Source:</strong> <?= e(strtoupper($order['source'])) ?></p>
+<div class="card">
+  <h2 class="section-title" style="margin-bottom:12px">Order Summary</h2>
+  <p style="font-size:13.5px;margin:0 0 8px"><strong>Target Link:</strong> <span style="word-break:break-all;color:var(--primary)"><?= e($order['link']) ?></span></p>
+  <p style="font-size:13.5px;margin:0;color:var(--muted)"><strong>Placed At:</strong> <?= e($order['created_at']) ?> &bull; <strong>Source:</strong> <?= e(strtoupper($order['source'])) ?></p>
 
-  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
     <?php if ((int) $order['refill_available'] === 1 && $order['status'] === 'completed'): ?>
       <form method="post"><?= csrf_field() ?><input type="hidden" name="action" value="refill"><button class="btn btn-primary btn-sm" type="submit">Request Refill</button></form>
     <?php endif; ?>
@@ -66,12 +70,14 @@ require __DIR__ . '/layouts/header.php';
 
 <div class="card">
   <h2 class="section-title" style="margin-bottom:12px">Order Timeline</h2>
-  <?php foreach ($logs as $lg): ?>
-    <div style="padding:10px 12px;border-bottom:1px solid #F2EEF9;font-size:13.5px">
+  <?php if (empty($logs)): ?>
+    <p style="color:var(--muted);font-size:13.5px;margin:0">No timeline events recorded yet.</p>
+  <?php else: foreach ($logs as $lg): ?>
+    <div style="padding:11px 13px;border-radius:14px;background:#FAF8FE;border:1px solid #EFEAF9;margin-bottom:8px;font-size:13.5px">
       <strong><?= e(ucfirst($lg['new_status'])) ?></strong> — <?= e($lg['message']) ?>
-      <div style="font-size:11.5px;color:#777083"><?= e($lg['created_at']) ?> (<?= e($lg['actor_type']) ?>)</div>
+      <div style="font-size:11.5px;color:var(--muted);margin-top:3px"><?= e($lg['created_at']) ?> (<?= e($lg['actor_type']) ?>)</div>
     </div>
-  <?php endforeach; ?>
+  <?php endforeach; endif; ?>
 </div>
 
 <?php require __DIR__ . '/layouts/footer.php'; ?>

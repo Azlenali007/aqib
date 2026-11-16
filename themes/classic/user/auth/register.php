@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 $siteName = (string) get_setting('site_name', 'SMM Panel');
+$siteTagline = (string) get_setting('site_tagline', 'Grow Your Social Media');
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,37 +10,50 @@ $siteName = (string) get_setting('site_name', 'SMM Panel');
   <title>Create Account — <?= e($siteName) ?></title>
   <link rel="stylesheet" href="/themes/classic/user/assets/css/classic.css">
 </head>
-<body style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px">
-<div class="card" style="max-width:480px;width:100%;padding:28px">
-  <div style="text-align:center;margin-bottom:20px">
-    <div class="brand-title" style="font-size:22px">Create <span>Account</span></div>
-    <p style="margin:4px 0 0;color:#777083;font-size:14px">Join <?= e($siteName) ?> to place automated SMM orders</p>
+<body style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px 16px">
+<div style="width:100%;max-width:520px">
+  <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
+    <a href="/public/index.php?page=home" class="view-all-pill">&larr; Back to Home</a>
+    <a href="/user/login.php" style="font-size:13px;font-weight:700;color:var(--primary)">Sign In</a>
   </div>
-  <?php if (!empty($error)): ?><div class="alert alert-error"><?= e($error) ?></div><?php endif; ?>
-  <?php if (!empty($success)): ?><div class="alert alert-success"><?= e($success) ?></div><?php endif; ?>
-  <form method="post">
-    <?= csrf_field('auth') ?>
-    <div class="grid-2">
-      <div class="form-group"><label class="form-label">Username</label><input class="form-control" name="username" value="<?= e($_POST['username'] ?? '') ?>" required></div>
-      <div class="form-group"><label class="form-label">Full Name</label><input class="form-control" name="full_name" value="<?= e($_POST['full_name'] ?? '') ?>" required></div>
+  <div class="card" style="padding:30px 26px;margin-bottom:0">
+    <div style="text-align:center;margin-bottom:20px">
+      <a href="/public/index.php?page=home" style="display:inline-flex;align-items:center;gap:10px;margin-bottom:8px">
+        <svg width="38" height="38" viewBox="0 0 40 40" fill="none" aria-hidden="true"><defs><linearGradient id="arg" x1="4" y1="36" x2="36" y2="4" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#8B5CF6"/><stop offset="100%" stop-color="#3B82F6"/></linearGradient></defs><rect x="6" y="23" width="6" height="11" rx="2.5" fill="url(#arg)"/><rect x="15" y="17" width="6" height="17" rx="2.5" fill="url(#arg)"/><rect x="24" y="10" width="6" height="24" rx="2.5" fill="url(#arg)"/><path d="M5 20L17 11L22 14L33 5" stroke="#5B42F3" stroke-width="2.6" stroke-linecap="round"/><path d="M27 5H33V11" stroke="#5B42F3" stroke-width="2.6" stroke-linecap="round"/></svg>
+        <div style="text-align:left">
+          <div class="brand-title" style="font-size:20px">SMM <span>Panel</span></div>
+          <div class="brand-sub"><?= e($siteTagline) ?></div>
+        </div>
+      </a>
+      <h1 style="margin:6px 0 4px;font-size:20px;font-weight:800">Create Account</h1>
+      <p style="margin:0;color:var(--muted);font-size:13.5px">Join <?= e($siteName) ?> to place automated SMM orders</p>
     </div>
-    <div class="grid-2">
-      <div class="form-group"><label class="form-label">Email Address</label><input class="form-control" type="email" name="email" value="<?= e($_POST['email'] ?? '') ?>" required></div>
-      <div class="form-group"><label class="form-label">Mobile (optional)</label><input class="form-control" name="mobile" value="<?= e($_POST['mobile'] ?? '') ?>"></div>
-    </div>
-    <div class="grid-2">
-      <div class="form-group"><label class="form-label">Password (min 8 chars)</label><input class="form-control" type="password" name="password" minlength="8" required></div>
-      <div class="form-group"><label class="form-label">Confirm Password</label><input class="form-control" type="password" name="password_confirmation" minlength="8" required></div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Referral Code (optional)</label>
-      <input class="form-control" name="referral_code" value="<?= e($_POST['referral_code'] ?? Session::get('referral_code', '')) ?>">
-    </div>
-    <button class="btn btn-primary" style="width:100%" type="submit">Create Account</button>
-  </form>
-  <p style="text-align:center;margin:16px 0 0;font-size:13.5px;color:#777083">
-    Already have an account? <a href="/user/login.php" style="color:#7045D8;font-weight:700">Sign In</a>
-  </p>
+    <?php if (!empty($error)): ?><div class="alert alert-error"><?= e($error) ?></div><?php endif; ?>
+    <?php if (!empty($success)): ?><div class="alert alert-success"><?= e($success) ?></div><?php endif; ?>
+    <form method="post">
+      <?= csrf_field('auth') ?>
+      <div class="grid-2">
+        <div class="form-group"><label class="form-label">Username</label><input class="form-control" name="username" value="<?= e($_POST['username'] ?? '') ?>" required></div>
+        <div class="form-group"><label class="form-label">Full Name</label><input class="form-control" name="full_name" value="<?= e($_POST['full_name'] ?? '') ?>" required></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label class="form-label">Email Address</label><input class="form-control" type="email" name="email" value="<?= e($_POST['email'] ?? '') ?>" required></div>
+        <div class="form-group"><label class="form-label">Mobile (optional)</label><input class="form-control" name="mobile" value="<?= e($_POST['mobile'] ?? '') ?>"></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label class="form-label">Password (min 8 chars)</label><input class="form-control" type="password" name="password" minlength="8" required></div>
+        <div class="form-group"><label class="form-label">Confirm Password</label><input class="form-control" type="password" name="password_confirmation" minlength="8" required></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Referral Code (optional)</label>
+        <input class="form-control" name="referral_code" value="<?= e($_POST['referral_code'] ?? Session::get('referral_code', '')) ?>">
+      </div>
+      <button class="btn btn-primary" style="width:100%" type="submit">Create Account</button>
+    </form>
+    <p style="text-align:center;margin:16px 0 0;font-size:13.5px;color:var(--muted)">
+      Already have an account? <a href="/user/login.php" style="color:var(--primary);font-weight:700">Sign In</a>
+    </p>
+  </div>
 </div>
 </body>
 </html>

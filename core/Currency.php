@@ -289,45 +289,136 @@ class Currency
         ];
     }
 
-    public static function convertFromBase(string|float $amountBase, string $targetCurrency): string
+    /**
+     * Convert base currency amount to target currency strictly.
+     * Returns explicit error when rate is missing — NEVER silently assumes 1.0!
+     */
+    public static function tryConvertFromBase(string|float $amountBase, string $targetCurrency, int $scale = 4): array
     {
         $base = self::systemBase();
         $target = strtoupper(trim($targetCurrency));
+        if ($target === '' || strlen($target) !== 3) {
+            return ['success' => false, 'amount' => null, 'currency' => $base, 'rate' => null, 'error' => 'Invalid target currency.'];
+        }
         if ($target === $base) {
-            return self::normalizeDecimal($amountBase, 4);
+            return ['success' => true, 'amount' => self::normalizeDecimal($amountBase, $scale), 'currency' => $base, 'rate' => '1.00000000', 'error' => null];
         }
         $rateInfo = self::getExchangeRate($base, $target);
         if ($rateInfo === null) {
-            return self::normalizeDecimal($amountBase, 4);
+            return [
+                'success' => false,
+                'amount' => null,
+                'currency' => $base,
+                'rate' => null,
+                'error' => "Exchange rate missing for $base → $target.",
+            ];
         }
-        return self::mul($amountBase, $rateInfo['rate'], 4);
+        return [
+            'success' => true,
+            'amount' => self::mul($amountBase, $rateInfo['rate'], $scale),
+            'currency' => $target,
+            'rate' => $rateInfo['rate'],
+            'error' => null,
+        ];
+    }
+
+    public static function convertFromBase(string|float $amountBase, string $targetCurrency): string
+    {
+        $res = self::tryConvertFromBase($amountBase, $targetCurrency, 4);
+        if (!$res['success'] || $res['amount'] === null) {
+            throw new RuntimeException($res['error'] ?? 'Exchange rate unavailable.');
+        }
+        return $res['amount'];
+    }
+
+    /**
+     * Build complete display currency context for UI rendering & JS calculators.
+     * Never returns rate 1.0 for a non-base currency when its rate is missing.
+     */
+    public static function getDisplayContext(?string $requestedCurrency = null): array
+    {
+        $base = self::systemBase();
+        $requested = strtoupper(trim((string) ($requestedCurrency ?: $base)));
+        if ($requested === '') {
+            $requested = $base;
+        }
+        $requestedMeta = self::getCurrencyMeta($requested);
+
+        if ($requested === $base) {
+            $baseMeta = self::getCurrencyMeta($base);
+            return [
+                'base_currency' => $base,
+                'requested_currency' => $base,
+                'effective_currency' => $base,
+                'rate' => '1.00000000',
+                'rate_available' => true,
+                'source' => 'system_base',
+                'meta' => $baseMeta,
+                'requested_meta' => $baseMeta,
+                'warning' => null,
+            ];
+        }
+
+        $rateInfo = self::getExchangeRate($base, $requested);
+        if ($rateInfo !== null) {
+            return [
+                'base_currency' => $base,
+                'requested_currency' => $requested,
+                'effective_currency' => $requested,
+                'rate' => $rateInfo['rate'],
+                'rate_available' => true,
+                'source' => $rateInfo['source'],
+                'meta' => $requestedMeta,
+                'requested_meta' => $requestedMeta,
+                'warning' => null,
+            ];
+        }
+
+        $baseMeta = self::getCurrencyMeta($base);
+        return [
+            'base_currency' => $base,
+            'requested_currency' => $requested,
+            'effective_currency' => $base,
+            'rate' => '1.00000000',
+            'rate_available' => false,
+            'source' => null,
+            'meta' => $baseMeta,
+            'requested_meta' => $requestedMeta,
+            'warning' => "Exchange rate for {$requested} is not configured yet. Displaying amounts in system base currency ({$base}) instead of assuming a 1:1 rate.",
+        ];
     }
 
     public static function format(string|float $amountBase, ?string $displayCurrency = null, ?int $decimals = null): string
     {
         $base = self::systemBase();
         $target = strtoupper(trim($displayCurrency ?: $base));
-        $converted = $amountBase;
+        $converted = self::normalizeDecimal($amountBase, 6);
         $usedCurrency = $base;
 
         if ($target !== $base) {
             $rateInfo = self::getExchangeRate($base, $target);
             if ($rateInfo !== null) {
-                $converted = self::mul($amountBase, $rateInfo['rate'], 4);
+                $converted = self::mul($amountBase, $rateInfo['rate'], 6);
                 $usedCurrency = $target;
             }
         }
 
         $meta = self::getCurrencyMeta($usedCurrency);
         $dec = $decimals ?? (int) ($meta['decimal_places'] ?? 2);
-        $num = (float) self::normalizeDecimal($converted, max(2, $dec));
-        return $meta['symbol'] . number_format($num, $dec, '.', ',');
+        $num = (float) self::normalizeDecimal($converted, max(4, $dec));
+        if ($decimals === null && $num > 0 && $num < (1 / (10 ** max(1, $dec)))) {
+            $dec = min(4, $dec + 2);
+        }
+        $neg = $num < 0;
+        $formatted = number_format(abs($num), $dec, '.', ',');
+        return ($neg ? '-' : '') . $meta['symbol'] . $formatted;
     }
 
     public static function formatRaw(string|float $rawAmount, string $currencyCode, int $decimals = 2): string
     {
         $meta = self::getCurrencyMeta($currencyCode);
-        $num = (float) self::normalizeDecimal($rawAmount, max(2, $decimals));
-        return $meta['symbol'] . number_format($num, $decimals, '.', ',');
+        $num = (float) self::normalizeDecimal($rawAmount, max(4, $decimals));
+        $neg = $num < 0;
+        return ($neg ? '-' : '') . $meta['symbol'] . number_format(abs($num), $decimals, '.', ',');
     }
 }

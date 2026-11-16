@@ -32,9 +32,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 require __DIR__ . '/layouts/header.php';
 ?>
+<div class="page-banner">
+  <div class="page-banner-left">
+    <div class="page-banner-icon" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+    <div>
+      <h1 class="page-banner-title"><?= e($user['full_name'] ?: $user['username']) ?></h1>
+      <p class="page-banner-sub">User ID: #<?= (int) $user['id'] ?> &bull; Balance: <?= e(format_money((string) ($user['balance'] ?? '0'), $displayCurrency)) ?></p>
+    </div>
+  </div>
+  <a href="/user/index.php?page=settings" class="view-all-pill">Preferences &rarr;</a>
+</div>
+
 <div class="grid-2">
   <div class="card">
-    <h1 class="section-title" style="margin-bottom:14px">Profile Information</h1>
+    <h2 class="section-title" style="margin-bottom:14px">Profile Information</h2>
     <form method="post">
       <?= csrf_field() ?>
       <input type="hidden" name="action" value="update_profile">

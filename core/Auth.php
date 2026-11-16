@@ -81,6 +81,9 @@ class Auth
 
         Security::recordLoginAttempt('user', $login, true);
         self::createSession((int) $user['id']);
+        if (!empty($user['preferred_currency'])) {
+            Session::set('display_currency', strtoupper((string) $user['preferred_currency']));
+        }
         Database::execute(
             'UPDATE users SET last_login_at = NOW(), last_login_ip = ? WHERE id = ?',
             [Security::clientIp(), $user['id']]

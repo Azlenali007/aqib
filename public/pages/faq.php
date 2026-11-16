@@ -7,10 +7,13 @@ $faqs = json_decode((string) get_setting('faq_json', '[]'), true) ?: [];
 <div class="container" style="padding-top:28px;max-width:860px">
   <div class="card">
     <h1 style="margin:0 0 16px">Frequently Asked Questions</h1>
-    <?php foreach ($faqs as $item): ?>
-      <div style="border:1px solid #EAE5F1;border-radius:14px;padding:14px;margin-bottom:10px">
-        <button data-faq-toggle type="button" style="background:none;border:none;width:100%;text-align:left;font-weight:700;font-size:15px;cursor:pointer;color:#211A2D"><?= e($item['q'] ?? '') ?></button>
-        <div style="margin-top:8px;color:#777083;font-size:14px"><?= e($item['a'] ?? '') ?></div>
+    <?php foreach ($faqs as $idx => $item): ?>
+      <div style="border:1px solid #EAE2F5;border-radius:16px;padding:14px 16px;margin-bottom:10px;background:#FAF8FE">
+        <button data-faq-toggle type="button" aria-expanded="true" style="background:none;border:none;width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;font-weight:700;font-size:15px;cursor:pointer;color:#1F182B;padding:0">
+          <span><?= e($item['q'] ?? '') ?></span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7045D8" stroke-width="2.4" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div style="margin-top:8px;color:#6E667D;font-size:14px;display:block"><?= e($item['a'] ?? '') ?></div>
       </div>
     <?php endforeach; ?>
   </div>

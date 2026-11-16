@@ -3,6 +3,8 @@ declare(strict_types=1);
 $siteName = (string) get_setting('site_name', 'SMM Panel');
 $siteTagline = (string) get_setting('site_tagline', 'Grow Your Social Media');
 $pageTitle = $pageTitle ?? 'Dashboard';
+$displayCurrency = $displayCurrency ?? active_user_currency($user ?? null);
+$currencyCtx = $currencyCtx ?? Currency::getDisplayContext($displayCurrency);
 ?><!DOCTYPE html>
 <html lang="en">
 <head>

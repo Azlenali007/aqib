@@ -9,9 +9,32 @@ if (isset($_GET['set_currency'])) {
         $_SESSION['display_currency'] = $valid['code'];
         Database::execute('UPDATE users SET preferred_currency = ? WHERE id = ?', [$valid['code'], $user['id']]);
         $user['preferred_currency'] = $valid['code'];
+        $ctxCheck = Currency::getDisplayContext($valid['code']);
+        if (!$ctxCheck['rate_available']) {
+            Session::flash('error', $ctxCheck['warning'] ?? "Exchange rate unavailable for {$valid['code']}.");
+        } else {
+            Session::flash('success', "Display currency switched to {$valid['code']}.");
+        }
+    } else {
+        Session::flash('error', 'Selected currency is inactive or unsupported.');
     }
-    $cleanPage = preg_replace('/[^a-zA-Z0-9\/_-]/', '', (string) ($_GET['page'] ?? 'dashboard'));
-    Response::redirect('/user/index.php?page=' . ($cleanPage ?: 'dashboard'));
+
+    $redirectParams = [];
+    foreach ($_GET as $k => $v) {
+        if ($k === 'set_currency' || $k === 'ajax' || !is_scalar($v)) {
+            continue;
+        }
+        $cleanKey = preg_replace('/[^a-zA-Z0-9_-]/', '', (string) $k);
+        if ($cleanKey !== '') {
+            $redirectParams[$cleanKey] = (string) $v;
+        }
+    }
+    $cleanPage = trim((string) ($redirectParams['page'] ?? 'dashboard'), '/');
+    if (Router::resolveUserPage($cleanPage) === null) {
+        $cleanPage = 'dashboard';
+    }
+    $redirectParams['page'] = $cleanPage ?: 'dashboard';
+    Response::redirect('/user/index.php?' . http_build_query($redirectParams));
 }
 
 // Handle AJAX endpoints for User Panel (charge calculation, favourite toggle, notification read)
@@ -62,6 +85,7 @@ if ($targetFile === null) {
 }
 
 $displayCurrency = active_user_currency($user);
+$currencyCtx = Currency::getDisplayContext($displayCurrency);
 $unreadNotifications = Notification::unreadCount((int) $user['id']);
 $recentNotifications = get_user_notifications((int) $user['id'], 6);
 $activeCurrencies = Currency::activeCurrencies();

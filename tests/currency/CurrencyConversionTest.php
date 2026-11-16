@@ -23,6 +23,28 @@ function run_currency_conversion_tests(): void
     $calcMissing = Currency::calculateImportPricing('10.00', 'ZMW', 'INR', '20');
     TestRunner::assertTrue($calcMissing['success'] === false, 'Missing exchange rate blocks import instead of faking 1.0');
 
-    // Clean up test rate
+    // Test 4: User Display Currency Context & Missing-Rate Protection
+    Database::execute("DELETE FROM exchange_rates WHERE (base_currency='USD' AND target_currency='INR') OR (base_currency='INR' AND target_currency='USD')");
+    $ctxMissing = Currency::getDisplayContext('USD');
+    TestRunner::assertTrue($ctxMissing['rate_available'] === false, 'Display context flags missing INR->USD exchange rate');
+    TestRunner::assertSame(Currency::systemBase(), $ctxMissing['effective_currency'], 'Display context never fakes 1:1 USD label over INR amounts');
+    TestRunner::assertTrue($ctxMissing['warning'] !== null && $ctxMissing['warning'] !== '', 'Display context provides explicit warning message');
+
+    $threw = false;
+    try {
+        Currency::convertFromBase('100.00', 'USD');
+    } catch (RuntimeException $e) {
+        $threw = true;
+    }
+    TestRunner::assertTrue($threw, 'Currency::convertFromBase throws RuntimeException when rate is missing instead of returning 1:1');
+
+    // Test 5: With explicit INR -> USD rate, formatting converts dynamically while DB base stays untouched
+    ExchangeRate::setManualRate('INR', 'USD', '0.01200000', true);
+    $ctxValid = Currency::getDisplayContext('USD');
+    TestRunner::assertTrue($ctxValid['rate_available'] === true, 'Display context succeeds when INR->USD rate exists');
+    TestRunner::assertSame('USD', $ctxValid['effective_currency'], 'Effective display currency resolves to USD');
+    TestRunner::assertSame('$1.20', Currency::format('100.00', 'USD'), '100.00 INR formats dynamically as $1.20 at 0.012 rate');
+
+    // Clean up test rates
     Database::execute("DELETE FROM exchange_rates WHERE (base_currency='USD' AND target_currency='INR') OR (base_currency='INR' AND target_currency='USD')");
 }

@@ -1,1 +1,0 @@
-_csrf|a:2:{s:4:"auth";a:2:{s:5:"token";s:64:"1cdd0a937261f111db73a7f92932a2611a4f61a2b741df54c7c0dd6d2443bdcf";s:10:"created_at";i:1794832724;}s:7:"default";a:2:{s:5:"token";s:64:"01bcd8bef7423b25b3e6c5fd57ac31f27c921e1d11da906a354652e9558fe993";s:10:"created_at";i:1794832724;}}user_id|i:6;user_session_token|s:64:"a17a3e59ef6b74ddb7179cd2890e25c6cf18c5ec3a6a6b194d2fd01aa2874673";

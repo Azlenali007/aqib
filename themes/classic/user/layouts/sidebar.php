@@ -34,10 +34,16 @@ $navItems = [
 $brandLogoSvg = '<svg width="36" height="36" viewBox="0 0 40 40" fill="none" aria-hidden="true"><defs><linearGradient id="smmLogoG" x1="4" y1="36" x2="36" y2="4" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#8B5CF6"/><stop offset="100%" stop-color="#3B82F6"/></linearGradient></defs><rect x="6" y="23" width="6" height="11" rx="2.5" fill="url(#smmLogoG)"/><rect x="15" y="17" width="6" height="17" rx="2.5" fill="url(#smmLogoG)"/><rect x="24" y="10" width="6" height="24" rx="2.5" fill="url(#smmLogoG)"/><path d="M5 20L17 11L22 14L33 5" stroke="#5B42F3" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M27 5H33V11" stroke="#5B42F3" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
 $renderNav = static function (array $navItems, string $currentPage): void {
+    $parentMap = [
+        'order-details' => 'orders',
+        'ticket-details' => 'tickets',
+        'api-docs' => 'api',
+    ];
+    $effectivePage = $parentMap[$currentPage] ?? $currentPage;
     foreach ($navItems as $grp) {
         echo '<div class="sidebar-group-label">' . e($grp['group']) . '</div>';
         foreach ($grp['items'] as $item) {
-            $active = ($currentPage === $item['page'] || str_starts_with($currentPage, $item['page'] . '/')) ? 'active' : '';
+            $active = ($effectivePage === $item['page'] || str_starts_with($effectivePage, $item['page'] . '/')) ? 'active' : '';
             echo '<a class="sidebar-link ' . $active . '" href="/user/index.php?page=' . e($item['page']) . '">' . $item['icon'] . '<span>' . e($item['label']) . '</span></a>';
         }
     }

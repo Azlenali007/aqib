@@ -14,12 +14,22 @@ $minDep = (string) get_setting('referral_min_deposit', '100.00');
 
 require __DIR__ . '/layouts/header.php';
 ?>
+<div class="page-banner">
+  <div class="page-banner-left">
+    <div class="page-banner-icon" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    <div>
+      <h1 class="page-banner-title">Refer &amp; Earn <?= e($commPct) ?>% Commission</h1>
+      <p class="page-banner-sub">Earn <?= e($commPct) ?>% whenever referred users deposit at least <?= e(format_money($minDep, $displayCurrency)) ?></p>
+    </div>
+  </div>
+</div>
+
 <div class="card">
-  <h1 class="section-title" style="margin-bottom:8px">Refer &amp; Earn <?= e($commPct) ?>% Commission</h1>
-  <p style="color:#777083;font-size:13.5px;margin:0 0 16px">Share your link. Earn <?= e($commPct) ?>% whenever referred users deposit at least <?= e(format_money($minDep, $displayCurrency)) ?>.</p>
   <div class="grid-2">
-    <div class="form-group"><label class="form-label">Your Referral Code</label><input class="form-control" readonly value="<?= e($user['referral_code']) ?>"></div>
-    <div class="form-group"><label class="form-label">Your Referral Link</label><input class="form-control" readonly value="<?= e($refLink) ?>"></div>
+    <div class="form-group" style="margin-bottom:0"><label class="form-label">Your Referral Code</label><input class="form-control" readonly value="<?= e($user['referral_code']) ?>"></div>
+    <div class="form-group" style="margin-bottom:0"><label class="form-label">Your Referral Link</label><input class="form-control" readonly value="<?= e($refLink) ?>"></div>
   </div>
 </div>
 
@@ -37,10 +47,10 @@ require __DIR__ . '/layouts/header.php';
       <thead><tr><th>Referred User</th><th>Deposit Amount</th><th>Commission</th><th>Status</th><th>Date</th></tr></thead>
       <tbody>
       <?php if (empty($history)): ?>
-        <tr><td colspan="5" style="text-align:center;color:#777083">No referral commissions yet.</td></tr>
+        <tr><td colspan="5" style="text-align:center;color:var(--muted)">No referral commissions yet.</td></tr>
       <?php else: foreach ($history as $h): ?>
         <tr>
-          <td><?= e($h['referred_username']) ?></td>
+          <td><strong><?= e($h['referred_username']) ?></strong></td>
           <td><?= e(format_money((string) $h['base_amount'], $displayCurrency)) ?></td>
           <td style="font-weight:700;color:#16A36A"><?= e(format_money((string) $h['commission_amount'], $displayCurrency)) ?></td>
           <td><span class="badge <?= e(status_badge_class($h['status'])) ?>"><?= e(ucfirst($h['status'])) ?></span></td>

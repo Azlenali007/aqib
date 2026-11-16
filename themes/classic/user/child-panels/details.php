@@ -12,21 +12,35 @@ $stats = Database::fetchOne(
 );
 
 require dirname(__DIR__) . '/layouts/header.php';
-render_child_panel_tabs((int) $cpPanel['id'], 'child-panels/details');
 ?>
+<div class="page-banner">
+  <div class="page-banner-left">
+    <div class="page-banner-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    </div>
+    <div>
+      <h1 class="page-banner-title"><?= e($cpPanel['site_name']) ?> (#<?= (int) $cpPanel['id'] ?>)</h1>
+      <p class="page-banner-sub">Isolated tenant overview, wholesale balance, and reseller profit metrics.</p>
+    </div>
+  </div>
+  <span class="badge <?= e(status_badge_class($cpPanel['status'])) ?>"><?= e(ucfirst($cpPanel['status'])) ?></span>
+</div>
+<?php render_child_panel_tabs((int) $cpPanel['id'], 'child-panels/details'); ?>
+<div class="kpi-grid">
+  <div class="kpi-box"><div class="kpi-label">Panel Wholesale Balance</div><div class="kpi-val" style="color:var(--primary)"><?= e(format_money((string) $cpPanel['wallet_balance'], $displayCurrency)) ?></div></div>
+  <div class="kpi-box"><div class="kpi-label">Isolated Users</div><div class="kpi-val"><?= (int) ($stats['users'] ?? 0) ?></div></div>
+  <div class="kpi-box"><div class="kpi-label">Panel Orders</div><div class="kpi-val"><?= (int) ($stats['orders'] ?? 0) ?></div></div>
+  <div class="kpi-box"><div class="kpi-label">Net Panel Profit</div><div class="kpi-val" style="color:var(--success)"><?= e(format_money((string) ($stats['profit'] ?? '0'), $displayCurrency)) ?></div></div>
+</div>
 <div class="card">
   <div class="section-head">
-    <div>
-      <h1 class="section-title"><?= e($cpPanel['site_name']) ?> (#<?= (int) $cpPanel['id'] ?>)</h1>
-      <div style="font-size:12.5px;color:#777083">API Key: <code><?= e($cpPanel['api_key']) ?></code></div>
-    </div>
-    <span class="badge <?= e(status_badge_class($cpPanel['status'])) ?>"><?= e(ucfirst($cpPanel['status'])) ?></span>
+    <h2 class="section-title">Panel Summary</h2>
+    <a class="btn btn-primary btn-sm" href="/user/index.php?page=child-panels/wallet&panel_id=<?= (int) $cpPanel['id'] ?>">Fund Wholesale Wallet</a>
   </div>
-  <div class="kpi-grid">
-    <div class="kpi-box"><div class="kpi-label">Panel Wholesale Balance</div><div class="kpi-val" style="color:#7045D8"><?= e(format_money((string) $cpPanel['wallet_balance'], $displayCurrency)) ?></div></div>
-    <div class="kpi-box"><div class="kpi-label">Isolated Users</div><div class="kpi-val"><?= (int) ($stats['users'] ?? 0) ?></div></div>
-    <div class="kpi-box"><div class="kpi-label">Panel Orders</div><div class="kpi-val"><?= (int) ($stats['orders'] ?? 0) ?></div></div>
-    <div class="kpi-box"><div class="kpi-label">Net Panel Profit</div><div class="kpi-val" style="color:#16A36A"><?= e(format_money((string) ($stats['profit'] ?? '0'), $displayCurrency)) ?></div></div>
+  <div style="font-size:13.5px;color:var(--muted);line-height:1.7">
+    <div><strong>Total Panel Revenue:</strong> <?= e(format_money((string) ($stats['revenue'] ?? '0'), $displayCurrency)) ?></div>
+    <div><strong>Default Profit Margin:</strong> <?= e((string) $cpPanel['default_profit_margin']) ?>%</div>
+    <div><strong>Panel API Key:</strong> <code style="background:#F4EFFC;padding:3px 8px;border-radius:8px;color:var(--primary)"><?= e($cpPanel['api_key']) ?></code></div>
   </div>
 </div>
 <?php require dirname(__DIR__) . '/layouts/footer.php'; ?>

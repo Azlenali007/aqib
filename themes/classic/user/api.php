@@ -14,11 +14,21 @@ $apiOrders = Database::fetchAll("SELECT o.*, s.name AS service_name FROM orders 
 
 require __DIR__ . '/layouts/header.php';
 ?>
-<div class="card">
-  <div class="section-head">
-    <h1 class="section-title">Reseller API Access</h1>
-    <a href="/user/index.php?page=api-docs" class="view-all-pill">API Documentation &rarr;</a>
+<div class="page-banner">
+  <div class="page-banner-left">
+    <div class="page-banner-icon" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+    </div>
+    <div>
+      <h1 class="page-banner-title">Reseller API Access</h1>
+      <p class="page-banner-sub">Automate orders and sync statuses using REST API v2</p>
+    </div>
   </div>
+  <a href="/user/index.php?page=api-docs" class="view-all-pill">API Documentation &rarr;</a>
+</div>
+
+<div class="card">
+  <h2 class="section-title" style="margin-bottom:14px">Credentials &amp; Endpoint</h2>
   <div class="form-group">
     <label class="form-label">API Endpoint URL</label>
     <input class="form-control" readonly value="<?= e(app_url('/api/index.php')) ?>">
@@ -27,7 +37,7 @@ require __DIR__ . '/layouts/header.php';
     <label class="form-label">Your Secret API Key</label>
     <input class="form-control" readonly value="<?= e($keyRow['api_key'] ?? 'Not generated yet') ?>">
     <?php if (!empty($keyRow['last_used_at'])): ?>
-      <small style="color:#777083">Last used: <?= e($keyRow['last_used_at']) ?> (IP: <?= e($keyRow['last_used_ip'] ?? '-') ?>)</small>
+      <small style="color:var(--muted)">Last used: <?= e($keyRow['last_used_at']) ?> (IP: <?= e($keyRow['last_used_ip'] ?? '-') ?>)</small>
     <?php endif; ?>
   </div>
   <form method="post">
@@ -44,13 +54,13 @@ require __DIR__ . '/layouts/header.php';
       <thead><tr><th>ID</th><th>Service</th><th>Quantity</th><th>Charge</th><th>Status</th><th>Date</th></tr></thead>
       <tbody>
       <?php if (empty($apiOrders)): ?>
-        <tr><td colspan="6" style="text-align:center;color:#777083">No API orders placed yet.</td></tr>
+        <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px">No API orders placed yet.</td></tr>
       <?php else: foreach ($apiOrders as $ao): ?>
         <tr>
-          <td>#<?= (int) $ao['id'] ?></td>
+          <td><strong>#<?= (int) $ao['id'] ?></strong></td>
           <td><?= e($ao['service_name']) ?></td>
           <td><?= number_format((int) $ao['quantity']) ?></td>
-          <td><?= e(format_money((string) $ao['charge'], $displayCurrency)) ?></td>
+          <td style="font-weight:700;color:var(--primary)"><?= e(format_money((string) $ao['charge'], $displayCurrency)) ?></td>
           <td><span class="badge <?= e(status_badge_class($ao['status'])) ?>"><?= e(ucfirst($ao['status'])) ?></span></td>
           <td><?= e($ao['created_at']) ?></td>
         </tr>

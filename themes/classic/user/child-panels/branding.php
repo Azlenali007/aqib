@@ -19,10 +19,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 require dirname(__DIR__) . '/layouts/header.php';
-render_child_panel_tabs((int) $cpPanel['id'], 'child-panels/branding');
 ?>
-<div class="card" style="max-width:620px">
-  <h1 class="section-title" style="margin-bottom:14px">Branding &amp; Appearance</h1>
+<div class="page-banner">
+  <div class="page-banner-left">
+    <div class="page-banner-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+    </div>
+    <div>
+      <h1 class="page-banner-title">Branding &amp; Appearance</h1>
+      <p class="page-banner-sub"><?= e($cpPanel['site_name']) ?> &mdash; Customize logo, tagline, and primary theme accent.</p>
+    </div>
+  </div>
+</div>
+<?php render_child_panel_tabs((int) $cpPanel['id'], 'child-panels/branding'); ?>
+<div class="card" style="max-width:640px">
+  <h2 class="section-title" style="margin-bottom:14px">Brand Settings</h2>
   <form method="post" enctype="multipart/form-data">
     <?= csrf_field() ?>
     <div class="form-group"><label class="form-label">Website Name</label><input class="form-control" name="site_name" value="<?= e($cpPanel['site_name']) ?>" required></div>

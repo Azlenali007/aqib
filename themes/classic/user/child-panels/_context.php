@@ -22,7 +22,8 @@ function render_child_panel_tabs(int $panelId, string $activePage): void
         'child-panels/transactions' => 'Transactions',
         'child-panels/settings' => 'Settings',
     ];
-    echo '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px">';
+    echo '<div class="cp-tabs">';
+    echo '<a class="btn btn-outline btn-sm" href="/user/index.php?page=child-panels">&larr; All Panels</a>';
     foreach ($tabs as $p => $label) {
         $cls = $activePage === $p ? 'btn btn-primary btn-sm' : 'btn btn-outline btn-sm';
         echo '<a class="' . $cls . '" href="/user/index.php?page=' . $p . '&panel_id=' . $panelId . '">' . e($label) . '</a>';

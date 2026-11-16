@@ -51,31 +51,36 @@ require __DIR__ . '/layouts/header.php';
   <div class="welcome-card">
     <div class="welcome-left">
       <div class="welcome-wave" aria-hidden="true">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M18.5 11.5V6.5a1.5 1.5 0 0 0-3 0v4M15.5 10.5V4.5a1.5 1.5 0 0 0-3 0v6M12.5 10.5V5.5a1.5 1.5 0 0 0-3 0v7.5L7.6 11.1a1.5 1.5 0 0 0-2.1 2.1l4.4 5.1A6 6 0 0 0 14.5 20.5h.5a5.5 5.5 0 0 0 5.5-5.5v-3.5a1.5 1.5 0 0 0-2 0z" fill="#FBBF24" stroke="#D97706" stroke-width="1.2"/></svg>
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+          <path d="M18.5 11.5V6.5a1.5 1.5 0 0 0-3 0v4M15.5 10.5V4.5a1.5 1.5 0 0 0-3 0v6M12.5 10.5V5.5a1.5 1.5 0 0 0-3 0v7.5L7.6 11.1a1.5 1.5 0 0 0-2.1 2.1l4.4 5.1A6 6 0 0 0 14.5 20.5h.5a5.5 5.5 0 0 0 5.5-5.5v-3.5a1.5 1.5 0 0 0-2 0z" fill="#FBBF24" stroke="#D97706" stroke-width="1.2"/>
+        </svg>
       </div>
       <div style="min-width:0">
         <p class="welcome-sub">Welcome back,</p>
         <div class="welcome-name">
           <span><?= e($user['username']) ?></span>
           <?php if ((int) $user['is_verified'] === 1): ?>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#1D9BF0" aria-label="Verified Account"><path d="M22.5 12.5c0-1.58-.88-2.95-2.15-3.6.15-.44.23-.92.23-1.42 0-2.21-1.79-4-4-4-.5 0-.98.08-1.42.23C14.51 2.44 13.14 1.56 11.56 1.56c-1.58 0-2.95.88-3.6 2.15-.44-.15-.92-.23-1.42-.23-2.21 0-4 1.79-4 4 0 .5.08.98.23 1.42C1.5 9.55.62 10.92.62 12.5c0 1.58.88 2.95 2.15 3.6-.15.44-.23.92-.23 1.42 0 2.21 1.79 4 4 4 .5 0 .98-.08 1.42-.23.65 1.27 2.02 2.15 3.6 2.15 1.58 0 2.95-.88 3.6-2.15.44.15.92.23 1.42.23 2.21 0 4-1.79 4-4 0-.5-.08-.98-.23-1.42 1.27-.65 2.15-2.02 2.15-3.6zM10.2 16.5l-3.7-3.7 1.4-1.4 2.3 2.3 5.4-5.4 1.4 1.4-6.8 6.8z" fill="#1D9BF0"/><path d="M10.2 16.5l-3.7-3.7 1.4-1.4 2.3 2.3 5.4-5.4 1.4 1.4-6.8 6.8z" fill="#fff"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-label="Verified Account">
+              <path d="M22.5 12.5c0-1.58-.88-2.95-2.15-3.6.15-.44.23-.92.23-1.42 0-2.21-1.79-4-4-4-.5 0-.98.08-1.42.23C14.51 2.44 13.14 1.56 11.56 1.56c-1.58 0-2.95.88-3.6 2.15-.44-.15-.92-.23-1.42-.23-2.21 0-4 1.79-4 4 0 .5.08.98.23 1.42C1.5 9.55.62 10.92.62 12.5c0 1.58.88 2.95 2.15 3.6-.15.44-.23.92-.23 1.42 0 2.21 1.79 4 4 4 .5 0 .98-.08 1.42-.23.65 1.27 2.02 2.15 3.6 2.15 1.58 0 2.95-.88 3.6-2.15.44.15.92.23 1.42.23 2.21 0 4-1.79 4-4 0-.5-.08-.98-.23-1.42 1.27-.65 2.15-2.02 2.15-3.6z" fill="#1D9BF0"/>
+              <path d="M10.2 16.5l-3.7-3.7 1.4-1.4 2.3 2.3 5.4-5.4 1.4 1.4-6.8 6.8z" fill="#fff"/>
+            </svg>
           <?php endif; ?>
         </div>
         <p class="welcome-id">User ID: #<?= (int) $user['id'] ?></p>
       </div>
     </div>
     <div class="welcome-art" aria-hidden="true">
-      <svg width="96" height="68" viewBox="0 0 110 76" fill="none">
+      <svg width="102" height="72" viewBox="0 0 110 76" fill="none">
         <defs>
           <linearGradient id="barGradA" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8B5CF6"/><stop offset="100%" stop-color="#5B42F3"/></linearGradient>
           <linearGradient id="barGradB" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#60A5FA"/><stop offset="100%" stop-color="#3B82F6"/></linearGradient>
         </defs>
-        <rect x="8" y="48" width="16" height="22" rx="4" fill="url(#barGradA)" opacity="0.85"/>
+        <rect x="8" y="48" width="16" height="22" rx="4" fill="url(#barGradA)" opacity="0.88"/>
         <rect x="31" y="38" width="16" height="32" rx="4" fill="url(#barGradB)"/>
         <rect x="54" y="28" width="16" height="42" rx="4" fill="url(#barGradB)"/>
         <rect x="77" y="16" width="18" height="54" rx="4" fill="url(#barGradA)"/>
-        <path d="M10 38C34 32 60 22 92 6" stroke="#7045D8" stroke-width="3.2" stroke-linecap="round"/>
-        <path d="M84 5L94 5.5L92 15" stroke="#7045D8" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M10 38C34 32 60 22 92 6" stroke="#6D42E6" stroke-width="3.2" stroke-linecap="round"/>
+        <path d="M84 5L94 5.5L92 15" stroke="#6D42E6" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
   </div>

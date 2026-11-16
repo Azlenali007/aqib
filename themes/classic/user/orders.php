@@ -58,16 +58,24 @@ $orders = Database::fetchAll(
 require __DIR__ . '/layouts/header.php';
 ?>
 
-<div class="card">
-  <div class="section-head">
-    <h1 class="section-title">Orders History (<?= number_format($totalRows) ?>)</h1>
-    <a href="/user/index.php?page=new-order" class="btn btn-primary btn-sm">+ New Order</a>
+<div class="page-banner">
+  <div class="page-banner-left">
+    <div class="page-banner-icon" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+    </div>
+    <div>
+      <h1 class="page-banner-title">Orders History (<?= number_format($totalRows) ?>)</h1>
+      <p class="page-banner-sub">Track delivery progress, start counts, remains, and charges in <?= e($currencyCtx['effective_currency']) ?></p>
+    </div>
   </div>
+  <a href="/user/index.php?page=new-order" class="btn btn-primary btn-sm">+ New Order</a>
+</div>
 
+<div class="card">
   <form method="get" class="filter-bar">
     <input type="hidden" name="page" value="orders">
-    <input class="form-control" style="max-width:210px" name="q" value="<?= e($search) ?>" placeholder="Order ID, link, or service">
-    <select class="form-select" style="max-width:160px" name="status">
+    <input class="form-control" style="max-width:220px" name="q" value="<?= e($search) ?>" placeholder="Order ID, link, or service">
+    <select class="form-select" style="max-width:165px" name="status">
       <option value="">All Statuses</option>
       <?php foreach (ORDER_STATUSES as $st): ?>
         <option value="<?= e($st) ?>" <?= $statusFilter === $st ? 'selected' : '' ?>><?= e(ucfirst(str_replace('_', ' ', $st))) ?></option>
@@ -78,7 +86,7 @@ require __DIR__ . '/layouts/header.php';
     <button class="btn btn-primary btn-sm" type="submit">Filter</button>
   </form>
 
-  <div class="table-responsive">
+  <div class="table-responsive desktop-table-wrap">
     <table class="data-table">
       <thead>
         <tr>
@@ -94,7 +102,7 @@ require __DIR__ . '/layouts/header.php';
       </thead>
       <tbody>
       <?php if (empty($orders)): ?>
-        <tr><td colspan="8" style="text-align:center;color:#777083;padding:24px">No orders match your filter criteria.</td></tr>
+        <tr><td colspan="8" style="text-align:center;color:var(--muted);padding:24px">No orders match your filter criteria.</td></tr>
       <?php else: foreach ($orders as $ord): ?>
         <tr>
           <td><strong>#<?= (int) $ord['id'] ?></strong></td>
@@ -106,7 +114,7 @@ require __DIR__ . '/layouts/header.php';
           </td>
           <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?= e($ord['link']) ?></td>
           <td><?= number_format((int) $ord['quantity']) ?></td>
-          <td style="font-weight:700"><?= e(format_money((string) $ord['charge'], $displayCurrency)) ?></td>
+          <td style="font-weight:700;color:var(--primary)"><?= e(format_money((string) $ord['charge'], $displayCurrency)) ?></td>
           <td><?= $ord['start_count'] !== null ? number_format((int) $ord['start_count']) : '-' ?> / <?= $ord['remains'] !== null ? number_format((int) $ord['remains']) : '-' ?></td>
           <td><span class="badge <?= e(status_badge_class($ord['status'])) ?>"><?= e(ucfirst(str_replace('_', ' ', $ord['status']))) ?></span></td>
           <td><a class="btn btn-outline btn-sm" href="/user/index.php?page=order-details&id=<?= (int) $ord['id'] ?>">Details</a></td>
@@ -116,7 +124,15 @@ require __DIR__ . '/layouts/header.php';
     </table>
   </div>
 
-  <?php render_pagination($pageNum, $totalPages, '/user/index.php?page=orders&status=' . urlencode($statusFilter) . '&q=' . urlencode($search)); ?>
+  <div class="mobile-cards-list">
+    <?php if (empty($orders)): ?>
+      <div style="text-align:center;color:var(--muted);padding:20px">No orders match your filter criteria.</div>
+    <?php else: foreach ($orders as $ord): ?>
+      <?php require __DIR__ . '/components/order-card.php'; ?>
+    <?php endforeach; endif; ?>
+  </div>
+
+  <?php render_pagination($pageNum, $totalPages, '/user/index.php?page=orders&status=' . urlencode($statusFilter) . '&q=' . urlencode($search) . '&from=' . urlencode($dateFrom) . '&to=' . urlencode($dateTo)); ?>
 </div>
 
 <?php require __DIR__ . '/layouts/footer.php'; ?>
