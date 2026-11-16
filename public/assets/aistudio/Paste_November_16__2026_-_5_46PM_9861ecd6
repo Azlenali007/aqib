@@ -1,0 +1,1376 @@
+COMPLETE SMM PANEL — FINAL MASTER DEVELOPMENT PROMPT
+
+PURE PHP + MYSQL | NO NODE.JS | ZERO TYPESCRIPT | CPANEL READY
+
+You are required to build a complete, production-ready Social Media Marketing (SMM) Panel from scratch.
+
+I will provide a UI reference image with this prompt.
+
+Study the attached image carefully and use it as the primary visual reference for the User Panel design.
+
+The final application must be fully functional, responsive, secure, database-driven and ready for cPanel hosting.
+
+Do not create a demo, static prototype or incomplete application.
+
+==================================================
+
+1. ABSOLUTE TECHNOLOGY REQUIREMENTS
+    ==================================================
+
+Use only:
+
+* PHP 8.2+
+* MySQL
+* PDO
+* HTML5
+* CSS3
+* Vanilla JavaScript
+* AJAX
+* Alpine.js for lightweight interactions if required
+* Custom CSS for the complete UI
+
+STRICTLY PROHIBITED:
+
+* TypeScript
+* React
+* Next.js
+* Node.js
+* Vite
+* Webpack
+* npm
+* npx
+* Composer dependencies
+* Laravel
+* Symfony
+* SQLite
+* Any mandatory compilation or build process.
+
+ABSOLUTE FILE RESTRICTION:
+
+ZERO files with these extensions:
+
+* .ts
+* .tsx
+* .mts
+* .cts
+
+If any such file is accidentally generated, DELETE it and rewrite its functionality using PHP, CSS or normal JavaScript.
+
+Do not generate:
+
+* package.json
+* package-lock.json
+* tsconfig.json
+* node_modules/
+* unnecessary framework configuration files.
+
+The website must run directly through PHP and MySQL.
+
+No npm install.
+No npm run build.
+No Composer install.
+No frontend compilation.
+
+Do not use Tailwind CLI or introduce a build dependency. Use custom CSS and lightweight browser-compatible libraries where required.
+
+==================================================
+2. PROJECT STRUCTURE
+
+Create the project in the following structure.
+
+smmpanel/
+│
+├── index.php
+├── .htaccess
+├── robots.txt
+├── sitemap.xml
+├── favicon.ico
+│
+├── config/
+│   ├── app.php
+│   ├── database.php
+│   ├── constants.php
+│   ├── permissions.php
+│   ├── integrations.php
+│   └── security.php
+│
+├── core/
+│   ├── Database.php
+│   ├── Router.php
+│   ├── Auth.php
+│   ├── AdminAuth.php
+│   ├── Session.php
+│   ├── Security.php
+│   ├── Validator.php
+│   ├── Response.php
+│   ├── Logger.php
+│   ├── Mailer.php
+│   ├── Cache.php
+│   ├── Upload.php
+│   ├── Currency.php
+│   ├── ExchangeRate.php
+│   ├── Payment.php
+│   ├── Provider.php
+│   ├── Notification.php
+│   └── ErrorHandler.php
+│
+├── includes/
+│   ├── init.php
+│   ├── functions.php
+│   ├── csrf.php
+│   ├── permissions.php
+│   ├── maintenance.php
+│   └── notifications.php
+│
+├── public/
+│   ├── index.php
+│   ├── pages/
+│   │   ├── home.php
+│   │   ├── services.php
+│   │   ├── faq.php
+│   │   ├── about.php
+│   │   ├── contact.php
+│   │   ├── terms.php
+│   │   └── privacy.php
+│   └── assets/
+│       ├── css/
+│       ├── js/
+│       ├── images/
+│       └── icons/
+│
+├── user/
+│   ├── index.php
+│   ├── router.php
+│   ├── login.php
+│   ├── register.php
+│   ├── logout.php
+│   ├── forgot-password.php
+│   └── reset-password.php
+│
+├── themes/
+│   └── classic/
+│       ├── theme.json
+│       └── user/
+│           ├── dashboard.php
+│           ├── new-order.php
+│           ├── mass-order.php
+│           ├── orders.php
+│           ├── order-details.php
+│           ├── refill.php
+│           ├── services.php
+│           ├── favourites.php
+│           ├── wallet.php
+│           ├── add-funds.php
+│           ├── transactions.php
+│           ├── payments.php
+│           ├── api.php
+│           ├── api-docs.php
+│           ├── tickets.php
+│           ├── ticket-details.php
+│           ├── notifications.php
+│           ├── refer-earn.php
+│           ├── profile.php
+│           ├── settings.php
+│           ├── child-panels/
+│           │   ├── index.php
+│           │   ├── create.php
+│           │   ├── details.php
+│           │   ├── domains.php
+│           │   ├── branding.php
+│           │   ├── pricing.php
+│           │   ├── services.php
+│           │   ├── users.php
+│           │   ├── orders.php
+│           │   ├── wallet.php
+│           │   ├── transactions.php
+│           │   └── settings.php
+│           ├── auth/
+│           │   ├── login.php
+│           │   ├── register.php
+│           │   ├── forgot-password.php
+│           │   └── reset-password.php
+│           ├── layouts/
+│           │   ├── header.php
+│           │   ├── navbar.php
+│           │   ├── sidebar.php
+│           │   ├── footer.php
+│           │   └── bottom-nav.php
+│           ├── components/
+│           │   ├── alerts.php
+│           │   ├── modal.php
+│           │   ├── pagination.php
+│           │   ├── order-card.php
+│           │   ├── notification-popup.php
+│           │   └── currency-selector.php
+│           └── assets/
+│               ├── css/
+│               ├── js/
+│               ├── images/
+│               └── icons/
+│
+├── admin/
+│   ├── index.php
+│   ├── login.php
+│   ├── logout.php
+│   ├── dashboard.php
+│   ├── users/
+│   ├── orders/
+│   ├── categories/
+│   ├── services/
+│   ├── providers/
+│   ├── payments/
+│   ├── gateways/
+│   ├── wallet/
+│   ├── currency/
+│   ├── referrals/
+│   ├── child-panels/
+│   ├── tickets/
+│   ├── notifications/
+│   ├── website/
+│   ├── themes/
+│   ├── reports/
+│   ├── roles/
+│   ├── security/
+│   ├── settings/
+│   ├── layouts/
+│   ├── components/
+│   └── assets/
+│       ├── css/
+│       ├── js/
+│       ├── images/
+│       └── icons/
+│
+├── modules/
+│   ├── users/
+│   ├── orders/
+│   ├── services/
+│   ├── categories/
+│   ├── providers/
+│   ├── payments/
+│   ├── wallet/
+│   ├── currency/
+│   ├── referrals/
+│   ├── child-panels/
+│   ├── tickets/
+│   ├── notifications/
+│   ├── reports/
+│   ├── api/
+│   └── settings/
+│
+├── api/
+│   ├── index.php
+│   ├── auth.php
+│   ├── services.php
+│   ├── add-order.php
+│   ├── order-status.php
+│   ├── refill.php
+│   ├── cancel.php
+│   └── balance.php
+│
+├── integrations/
+│   ├── providers/
+│   │   ├── ProviderInterface.php
+│   │   └── GenericProvider.php
+│   ├── payments/
+│   │   ├── RazorpayGateway.php
+│   │   └── ManualGateway.php
+│   └── currency/
+│       ├── Frankfurter.php
+│       ├── OpenER.php
+│       └── FreeCurrencyFallback.php
+│
+├── cron/
+│   ├── order-sync.php
+│   ├── provider-sync.php
+│   ├── currency-update.php
+│   ├── refill-check.php
+│   ├── notifications.php
+│   └── cleanup.php
+│
+├── database/
+│   ├── schema.sql
+│   ├── migrations/
+│   └── seeds/
+│
+├── install/
+│   ├── index.php
+│   ├── requirements.php
+│   ├── database.php
+│   ├── setup.php
+│   └── complete.php
+│
+├── storage/
+│   ├── logs/
+│   ├── cache/
+│   ├── uploads/
+│   │   ├── tickets/
+│   │   ├── payments/
+│   │   └── profiles/
+│   ├── backups/
+│   └── sessions/
+│
+└── tests/
+├── database/
+├── authentication/
+├── orders/
+├── payments/
+├── wallet/
+├── providers/
+├── currency/
+└── child-panels/
+
+IMPORTANT FOLDER RULES:
+
+1. themes/classic/ contains ONLY User Panel UI.
+2. admin/ contains ONLY Admin Panel UI.
+3. public/ contains ONLY public website UI.
+4. modules/ contains backend business logic.
+5. core/ contains reusable system classes.
+6. Never mix Admin, User and Public UI files.
+7. Do not create empty placeholder files.
+8. Every required file must contain real working implementation.
+9. Additional PHP files can be created when genuinely necessary.
+10. Keep the project organized and maintainable.
+
+==================================================
+3. USER PANEL — COMPLETE FEATURES
+
+AUTHENTICATION:
+
+* Login
+* Registration
+* Forgot Password
+* Reset Password
+* Email Verification
+* Secure Logout
+* Session Management
+
+DASHBOARD:
+
+* Total Orders
+* Completed Orders
+* Pending Orders
+* Processing Orders
+* Cancelled Orders
+* Total Spending
+* Wallet Balance
+* Recent Orders
+* Recent Transactions
+* Quick Order
+* Announcements
+
+NEW ORDER:
+
+* Category Selection
+* Service Selection
+* Service Search
+* Service Description
+* Service ID
+* Minimum Quantity
+* Maximum Quantity
+* Price Per 1000
+* Quantity
+* Link
+* Automatic Charge Calculation
+* Available Balance
+* Order Confirmation
+* Favourite Services
+* Recent Services
+
+IMPORTANT PLATFORM ICON REQUIREMENT:
+
+Display appropriate platform icons for categories and services.
+
+Examples:
+
+* Instagram services must show Instagram icon.
+* YouTube services must show YouTube icon.
+* Facebook services must show Facebook icon.
+* Telegram services must show Telegram icon.
+* TikTok services must show TikTok icon.
+* Other platforms must use their respective icons.
+
+Use premium SVG icons or official platform icons where permitted.
+
+Never use random emojis as platform icons.
+
+Category and service icons must be visible in the New Order interface.
+
+MASS ORDER:
+
+* Multiple orders in one submission.
+* Multiple links and quantities.
+* Automatic charge calculation.
+* Validation.
+* Total cost preview.
+* Individual order status.
+* Mass order history.
+
+ORDERS:
+
+* All Orders
+* Pending
+* Processing
+* In Progress
+* Completed
+* Partial
+* Cancelled
+* Search by Order ID
+* Date and Status Filters
+* Order Details
+* Refill Request
+* Cancel Request when supported
+* Remaining Quantity
+* Start Count when available
+* Charge Details
+
+SERVICES:
+
+* All Services
+* Categories
+* Search
+* Service Details
+* Favourites
+* Recently Used Services
+* Price Information
+* Refill Availability
+* Cancellation Availability
+
+WALLET AND PAYMENTS:
+
+* Wallet Balance
+* Add Funds
+* Razorpay
+* Manual Payment
+* Payment History
+* Deposit History
+* Transactions
+* Pending / Approved / Rejected Payments
+* Payment Receipts
+* Deposit Limits
+
+API AND RESELLER:
+
+* API Key Generation
+* API Key Regeneration
+* API Documentation
+* API Balance
+* Service List API
+* Add Order API
+* Order Status API
+* Refill API
+* Cancel API when supported
+* API Order History
+
+CHILD PANEL MANAGEMENT:
+
+* Create Child Panel
+* Manage Multiple Child Panels
+* Custom Website Name
+* Custom Domain
+* Domain Verification
+* Custom Logo
+* Custom Favicon
+* Custom Branding
+* Custom Theme Settings
+* Custom Service Pricing
+* Profit Margin
+* Enable / Disable Services
+* Child Panel Users
+* Child Panel Orders
+* Child Panel Wallet
+* Add Funds to Child Panel
+* Child Panel Transactions
+* Child Panel Statistics
+* Child Panel API
+* Child Panel Settings
+* Activate / Suspend Child Panel
+* Child Panel Support
+
+Each child panel must have isolated users, orders, wallet records and configuration.
+
+Do not allow one child panel to access another child’s data.
+
+SUPPORT:
+
+* Create Ticket
+* Categories
+* Subject
+* Message
+* Attachments
+* Replies
+* Ticket Status
+* Ticket History
+* Close Ticket
+
+REFER AND EARN:
+
+* Unique Referral Code
+* Referral Link
+* Total Referrals
+* Successful Referrals
+* Referral Earnings
+* Referral History
+* Commission Details
+* Wallet Credit
+
+NOTIFICATIONS:
+
+* Order Notifications
+* Payment Notifications
+* Wallet Notifications
+* Refill Notifications
+* Ticket Notifications
+* Admin Announcements
+* Read / Unread
+
+PROFILE AND SETTINGS:
+
+* Profile Information
+* Change Password
+* Email
+* Mobile Number
+* Profile Picture
+* Currency Selection
+* Language
+* Time Zone
+* Login Sessions
+* Account Security
+
+ADDITIONAL:
+
+* WhatsApp / Telegram Popup
+* FAQ
+* Contact Support
+* Terms and Privacy
+* Responsive Mobile Navigation
+* Desktop Sidebar
+
+==================================================
+4. ADMIN PANEL — COMPLETE FEATURES
+
+ADMIN DASHBOARD:
+
+* Total Users
+* Active Users
+* Total Orders
+* Pending Orders
+* Processing Orders
+* Completed Orders
+* Cancelled Orders
+* Revenue
+* Profit
+* Wallet Balance
+* Deposits
+* Provider Statistics
+* Child Panel Statistics
+* Sales Charts
+* Recent Orders
+* Recent Transactions
+
+USER MANAGEMENT:
+
+* Add User
+* Edit User
+* Delete User
+* Suspend / Activate
+* User Details
+* Wallet Management
+* Add / Deduct Balance
+* Order History
+* Transaction History
+* Reset Password
+* User Notes
+* Search and Filters
+
+ORDER MANAGEMENT:
+
+* All Order Statuses
+* Search
+* Filters
+* Order Details
+* Edit Order
+* Cancel Order
+* Refill Management
+* Manual Status Update
+* Provider Order ID
+* Order Logs
+* Bulk Actions
+* Export Orders
+
+CATEGORY MANAGEMENT:
+
+* Add / Edit / Delete Categories
+* Category Name
+* Description
+* Platform Icon
+* Position
+* Enable / Disable
+* Sorting
+
+SERVICE MANAGEMENT:
+
+* Add Service
+* Edit Service
+* Delete Service
+* Service Name
+* Description
+* Service ID
+* Category
+* Service Icon
+* Minimum / Maximum Quantity
+* Provider Cost
+* Selling Price
+* Profit Margin
+* Refill Support
+* Cancel Support
+* Enable / Disable
+* Featured Services
+* Sorting
+
+PROVIDER MANAGEMENT:
+
+* Add Provider
+* Edit Provider
+* Delete Provider
+* Multiple Providers
+* API URL
+* API Key
+* Test Connection
+* Provider Balance
+* Provider Currency
+* Import Services
+* Import Selected
+* Import All
+* Import Preview
+* Duplicate Detection
+* Service Mapping
+* Price Sync
+* Order Forwarding
+* Status Sync
+* Refill API
+* Cancel API
+* Provider Logs
+* Error Logs
+* Provider Priority
+* Enable / Disable Provider
+
+==================================================
+5. BULK OPERATIONS — MANDATORY
+
+BULK PROVIDER SERVICE IMPORT:
+
+* Select All
+* Select Multiple Services
+* Import Selected Services
+* Bulk Category Assignment
+* Bulk Profit Margin
+* Bulk Price Adjustment
+* Bulk Enable / Disable
+* Bulk Duplicate Detection
+* Bulk Import Preview
+* Bulk Import Confirmation
+
+BULK SERVICE MANAGEMENT:
+
+* Select Multiple Services
+* Bulk Edit
+* Bulk Delete
+* Bulk Enable / Disable
+* Bulk Category Change
+* Bulk Selling Price Change
+* Bulk Profit Margin Change
+* Bulk Provider Change
+* Bulk Service Reassignment
+* Bulk Refill / Cancel Settings
+* Bulk Sorting
+* Bulk Export
+
+Bulk operations must have:
+
+* Confirmation before destructive actions.
+* Success count.
+* Failure count.
+* Individual failure reasons.
+* Processing status.
+* Activity logs.
+* Safe batch processing for large datasets.
+
+If one service fails, do not unnecessarily stop every other valid service.
+
+==================================================
+6. CRITICAL CURRENCY SYSTEM — MUST BE CORRECT
+
+Currency handling is one of the most important requirements.
+
+Never treat a provider’s numeric price as USD automatically.
+
+Example:
+
+Provider gives service price = ₹1 INR.
+
+System base currency = INR.
+
+Expected imported cost = ₹1 INR.
+
+It must NEVER become $1 USD.
+
+Every provider must have an independently configured currency.
+
+Support ISO currency codes such as:
+
+INR, USD, EUR, GBP, AED and other configured currencies.
+
+Maintain three separate concepts:
+
+1. Provider Original Currency.
+2. System Accounting/Base Currency.
+3. User Display Currency.
+
+PROVIDER IMPORT CONVERSION:
+
+* Read the actual provider price.
+* Read provider currency from the API if explicitly provided.
+* Otherwise use the currency configured for that provider.
+* Read system base currency.
+* Retrieve a valid exchange rate if currencies differ.
+* Convert provider cost correctly.
+* Apply configured profit margin after conversion.
+* Save original price and currency.
+* Save conversion rate used.
+* Save converted cost.
+* Save final selling price.
+
+Formula:
+
+Converted Cost = Provider Price × Correct Exchange Rate
+
+If both currencies match, conversion rate is 1.
+
+If currency information is missing, block the import and show a clear admin warning.
+
+Never silently assume USD.
+
+STORE:
+
+* provider_price
+* provider_currency
+* provider_cost_base
+* provider_exchange_rate
+* system_base_currency
+* selling_price
+* imported_at
+
+Use DECIMAL database fields and decimal-safe calculations.
+
+Never use floating-point arithmetic for money.
+
+IMPORT PREVIEW MUST SHOW:
+
+* Provider Price
+* Provider Currency
+* System Base Currency
+* Exchange Rate
+* Converted Cost
+* Profit Margin
+* Final Selling Price
+
+EXAMPLE:
+
+Provider Price: ₹1 INR
+System Base Currency: INR
+Converted Cost: ₹1 INR
+Profit Margin: 20%
+Selling Price: ₹1.20 INR
+
+Do not automatically change the system base currency.
+
+Do not rewrite historical orders, wallet transactions or payment records when exchange rates change.
+
+==================================================
+7. FREE AUTOMATIC CURRENCY UPDATE
+
+Use FREE exchange-rate sources only.
+
+Possible sources to integrate after checking their current availability and response formats:
+
+* Frankfurter: https://api.frankfurter.dev/
+* Open ER API: https://open.er-api.com/v6/latest/USD
+* Fawaz Ahmed Currency API: https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json
+
+Do not use paid APIs or require paid API subscriptions.
+
+Requirements:
+
+* Free source selection.
+* Primary source.
+* Fallback source.
+* PHP cURL integration.
+* Timeout and error handling.
+* Response validation.
+* Supported currency validation.
+* Last successful rate storage.
+* Last update timestamp.
+* Source tracking.
+* Rate history.
+* Manual override.
+* Admin enable / disable.
+* Update Now button.
+* Daily automatic cron update by default.
+
+If all APIs fail, keep the last valid rate.
+
+Never silently replace a failed rate with 1.0 or zero.
+
+If no valid rate exists, block the affected conversion and show an admin warning.
+
+==================================================
+8. CHILD PANEL ADMIN MANAGEMENT
+
+Admin must be able to:
+
+* View All Child Panels
+* Create Child Panel
+* Edit Child Panel
+* Approve / Reject
+* Activate / Suspend
+* Manage Custom Domains
+* Verify Domains
+* Manage Branding
+* Manage Logo and Favicon
+* Manage Themes
+* Manage Pricing
+* Manage Profit Margins
+* Manage Services
+* Manage Child Panel Users
+* Manage Child Panel Orders
+* Manage Child Panel Wallet
+* Add / Deduct Balance
+* View Transactions
+* Manage Child Panel API
+* View Statistics
+* View Activity Logs
+
+==================================================
+9. PAYMENTS AND WALLET
+
+Integrate:
+
+1. Real Razorpay payment gateway.
+2. Manual payment gateway.
+
+Admin must be able to enable or disable each gateway.
+
+RAZORPAY:
+
+* Server-side order creation.
+* Signature verification.
+* Secure webhook verification.
+* Idempotent payment processing.
+* Wallet credit only after verified successful payment.
+* Payment logs.
+* Error handling.
+
+MANUAL PAYMENTS:
+
+* User submits payment proof.
+* Admin reviews.
+* Approve / Reject.
+* Wallet credited only once after approval.
+* Transaction history.
+
+WALLET:
+
+* Transaction-safe balance changes.
+* Proper ledger.
+* Refund management.
+* Duplicate transaction prevention.
+* Row locking where necessary.
+* Never allow negative balance through race conditions.
+
+Never fake successful payment responses.
+
+==================================================
+10. OTHER ADMIN FEATURES
+
+REFERRAL MANAGEMENT:
+
+* Commission settings.
+* Referral conditions.
+* Referral history.
+* Approve / Reject.
+* Anti-abuse checks.
+
+SUPPORT TICKETS:
+
+* All Tickets.
+* Open / Pending / Closed.
+* Replies.
+* Assignments.
+* Priority.
+* Attachments.
+
+NOTIFICATIONS:
+
+* Send to All Users.
+* Send to Selected Users.
+* Child Panel Notifications.
+* Order / Payment Notifications.
+* Email Notifications.
+* Announcement Management.
+
+PUBLIC WEBSITE MANAGEMENT:
+
+* Logo.
+* Favicon.
+* Website Name.
+* Landing Page.
+* Hero Section.
+* About.
+* FAQ.
+* Contact.
+* Social Links.
+* SEO.
+* Terms.
+* Privacy.
+* Footer.
+
+THEME MANAGEMENT:
+
+* User Theme Management.
+* Classic Theme.
+* Enable / Disable.
+* Default Theme.
+* Theme Settings.
+
+REPORTS:
+
+* Sales Reports.
+* Profit Reports.
+* Order Reports.
+* User Reports.
+* Provider Reports.
+* Child Panel Reports.
+* Payment Reports.
+* Wallet Reports.
+* Referral Reports.
+* CSV / Excel Export.
+
+ROLES AND PERMISSIONS:
+
+* Super Admin.
+* Admin.
+* Support Staff.
+* Finance Manager.
+* Order Manager.
+* Custom Roles.
+* Page-wise Permissions.
+* Action-wise Permissions.
+
+SYSTEM SETTINGS:
+
+* General Settings.
+* SMTP Settings.
+* Maintenance Mode.
+* Registration Settings.
+* Security Settings.
+* Database Backup.
+* Restore Backup.
+* Error Logs.
+* Activity Logs.
+* Cron Monitoring.
+* System Health.
+
+==================================================
+11. USER PANEL UI — ATTACHED IMAGE IS THE MAIN REFERENCE
+
+The attached image is the primary design reference.
+
+Study its:
+
+* Layout.
+* Spacing.
+* Typography.
+* Colors.
+* Card shapes.
+* Gradients.
+* Shadows.
+* Icon placement.
+* Navigation.
+* Mobile proportions.
+* Dashboard composition.
+
+Recreate the visual style as closely as practical.
+
+Do not use a generic dashboard template.
+
+DESIGN DIRECTION:
+
+Premium modern SMM SaaS dashboard.
+
+COLOR PALETTE:
+
+* Primary Purple: #7045D8
+* Secondary Purple: #8B5CF6
+* Dark Purple: #24143D
+* Background: #F7F5FB
+* White: #FFFFFF
+* Primary Text: #211A2D
+* Secondary Text: #777083
+* Border: #EAE5F1
+* Success: #16A36A
+* Warning: #E9A23B
+* Danger: #E5485D
+
+REFERENCE IMAGE ELEMENTS TO RECREATE:
+
+TOP HEADER:
+
+* SMM Panel logo.
+* Brand name.
+* Tagline.
+* Currency selector.
+* Notification bell with unread badge.
+* Profile avatar.
+
+WELCOME CARD:
+
+* Welcome message.
+* User name.
+* Verification badge if applicable.
+* User ID.
+* Decorative growth illustration.
+
+WALLET CARD:
+
+* Large purple/blue gradient.
+* Wallet icon.
+* Available balance.
+* Account status.
+* Add Funds button.
+
+QUICK ACTION CARDS:
+
+* New Order.
+* Services.
+* Add Funds.
+* Orders.
+
+POPULAR SERVICES:
+
+* Instagram.
+* YouTube.
+* Facebook.
+* Telegram.
+* Relevant platform icons.
+* Starting prices.
+* View All action.
+
+RECENT ORDERS:
+
+* Service icon.
+* Service name.
+* Quantity.
+* Order ID.
+* Status badge.
+* Order details action.
+
+BOTTOM NAVIGATION:
+
+* Home.
+* Services.
+* Order.
+* Orders.
+* Profile.
+
+The central Order button can be highlighted as in the reference.
+
+BACKGROUND AND VISUAL STYLE:
+
+* Soft lavender background.
+* Subtle purple gradients.
+* Premium rounded cards.
+* Gentle shadows.
+* Soft decorative shapes.
+* Clear typography.
+* Premium SVG icons.
+* Consistent spacing.
+
+Make it mobile-first.
+
+The desktop layout must adapt the same design language into a professional dashboard with sidebar and top navigation.
+
+Do not simply stretch the mobile design across desktop.
+
+ALL USER PAGES:
+
+Use the same design system for:
+
+* New Order.
+* Mass Order.
+* Services.
+* Orders.
+* Wallet.
+* Add Funds.
+* Transactions.
+* API.
+* Tickets.
+* Referrals.
+* Child Panels.
+* Profile.
+* Settings.
+
+==================================================
+12. ADMIN PANEL UI
+
+Create a separate professional Admin Panel.
+
+Use the same Premium White + Purple design language.
+
+Admin UI must be distinct from the User Panel.
+
+Desktop:
+
+* Sidebar navigation.
+* Top navigation.
+* Dashboard statistics.
+* Data tables.
+* Filters.
+* Search.
+* Bulk action toolbar.
+* Charts.
+* Forms.
+* Modals.
+
+Mobile:
+
+* Responsive navigation.
+* Collapsible sidebar.
+* Properly stacked cards.
+* Responsive tables.
+* Accessible actions.
+
+Admin must not use the User Panel theme files.
+
+==================================================
+13. RESPONSIVE DESIGN — ALL PAGES
+
+Test every Public, User and Admin page at:
+
+* 320px
+* 360px
+* 375px
+* 390px
+* 430px
+* 768px
+* 1024px
+* 1280px
+* 1440px
+* 1920px
+
+Requirements:
+
+* No unwanted horizontal page scrolling.
+* No text overflow.
+* No overlapping elements.
+* No oversized cards.
+* No clipped forms.
+* No broken tables.
+* No sidebar overlap.
+* No missing CSS.
+* No fixed-width content that breaks mobile.
+* Proper line wrapping.
+* Proper responsive grid.
+* Images must remain within their containers.
+
+For tables, allow horizontal scrolling only inside their own responsive wrapper.
+
+Do not hide important content just to remove overflow.
+
+Do not apply overflow-x:hidden as a substitute for fixing layout problems.
+
+==================================================
+14. SECURITY REQUIREMENTS
+
+Implement:
+
+* PDO prepared statements.
+* Password hashing.
+* CSRF protection.
+* XSS protection.
+* Input validation.
+* Output escaping.
+* Session security.
+* Login rate limiting.
+* Secure password reset.
+* Authorization checks.
+* Role-based access control.
+* Secure file uploads.
+* Webhook signature verification.
+* API key protection.
+* Activity logs.
+* Error logs.
+* Secure database configuration.
+
+Protect config/, core/, includes/, modules/, database/, storage/ and install/ from unauthorized direct access.
+
+After installation, lock or disable the installer.
+
+Never expose secrets, API keys or database credentials in frontend code.
+
+==================================================
+15. DATABASE DESIGN
+
+Create a complete MySQL schema.sql.
+
+Include all required tables for:
+
+* Users.
+* Admins.
+* Roles.
+* Permissions.
+* Sessions.
+* Categories.
+* Services.
+* Providers.
+* Provider service mappings.
+* Orders.
+* Refill requests.
+* Wallets.
+* Wallet transactions.
+* Deposits.
+* Payments.
+* Payment gateways.
+* Currency settings.
+* Exchange rates.
+* Exchange rate history.
+* Referrals.
+* Tickets.
+* Ticket messages.
+* Notifications.
+* Child panels.
+* Child panel domains.
+* Child panel users.
+* Child panel services.
+* Child panel orders.
+* Child panel wallets.
+* API keys.
+* Activity logs.
+* Settings.
+
+Use proper foreign keys, indexes, unique constraints and DECIMAL financial columns.
+
+Create safe migrations for future changes.
+
+Do not drop existing tables or erase data during updates.
+
+==================================================
+16. INSTALLER AND CPANEL DEPLOYMENT
+
+Create a working PHP installer.
+
+Installation steps:
+
+1. Check PHP version.
+2. Check required PHP extensions.
+3. Check MySQL connection.
+4. Collect database credentials.
+5. Create/import database schema.
+6. Create initial admin account securely.
+7. Save configuration.
+8. Create necessary storage folders.
+9. Lock installer after successful setup.
+
+The application must run without npm or Composer.
+
+Provide a clear cPanel deployment guide.
+
+Include cron job instructions for:
+
+* Provider sync.
+* Order sync.
+* Currency updates.
+* Refill checks.
+* Notifications.
+* Cleanup.
+
+==================================================
+17. REAL FUNCTIONALITY — NO FAKE FEATURES
+
+Every button must perform its intended action.
+
+Every form must validate and submit.
+
+Every table must load actual database records.
+
+Every dashboard statistic must be calculated from real data.
+
+Every payment must be verified.
+
+Every provider API call must use the configured provider API.
+
+Do not invent API endpoints or claim unsupported provider actions work.
+
+Every feature must have:
+
+* Backend handler.
+* Database integration.
+* Permission checks.
+* Input validation.
+* Success/error handling.
+* Activity logging where appropriate.
+
+==================================================
+18. FINAL TESTING AND DELIVERY
+
+Before declaring the project complete:
+
+1. Check every PHP file for syntax errors.
+2. Check all include paths.
+3. Check database connections.
+4. Check every login flow.
+5. Check User Panel.
+6. Check Admin Panel.
+7. Check Public Website.
+8. Check provider import.
+9. Check INR/USD conversion.
+10. Check bulk service import.
+11. Check bulk service management.
+12. Check Razorpay verification.
+13. Check manual payments.
+14. Check wallet calculations.
+15. Check child panel isolation.
+16. Check responsive layouts.
+17. Check CSS and JS loading.
+18. Check cron scripts.
+19. Search the entire project for prohibited extensions.
+20. Confirm that no Node.js or TypeScript dependency exists.
+
+Run PHP lint checks on all PHP files if the environment supports it.
+
+Test actual database and API operations where credentials are available.
+
+Do not claim a feature has been tested if it has not been tested.
+
+If a real external credential is missing, implement the integration properly and clearly identify what configuration is required.
+
+FINAL STRICT REQUIREMENTS:
+
+* Build the complete project in one consistent architecture.
+* Do not generate only folder structures.
+* Do not create empty placeholder files.
+* Do not leave fake demo data as actual functionality.
+* Do not use TypeScript.
+* If any .ts/.tsx/.mts/.cts files appear, delete them and rewrite the functionality.
+* Do not create package.json or package-lock.json.
+* Do not introduce Node.js.
+* Do not introduce build dependencies.
+* Do not use SQLite.
+* Do not move User Panel pages outside themes/classic/user/.
+* Do not put Admin or Public UI inside themes/classic/.
+* Preserve correct provider currency handling.
+* Preserve all bulk operation requirements.
+* Follow the attached image for User Panel UI.
+* Ensure the final project is directly deployable on PHP/MySQL cPanel hosting.
+
+Build the complete working application, not a visual demo.

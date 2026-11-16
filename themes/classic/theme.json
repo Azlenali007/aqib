@@ -1,0 +1,9 @@
+{
+  "slug": "classic",
+  "name": "Classic",
+  "version": "1.0.0",
+  "description": "Premium White & Purple SMM SaaS User Theme",
+  "author": "SMM Panel Pro",
+  "default_primary_color": "#7045D8",
+  "default_secondary_color": "#8B5CF6"
+}
